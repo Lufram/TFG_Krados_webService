@@ -14,21 +14,21 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "order")
-public class Order {
+@Table(name = "purchase")
+public class Purchase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date orderDate;
+    private Date purchaseDate;
     private String status;
 
-    /*@ManyToOne
-    @JoinColumn(name = "client_id")
-    private Client client;*/
+    @ManyToOne
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
+    private Client client;
 
-    @OneToMany(mappedBy = "order")
-    private List<ProductInOrder> pInOrder;
+    @OneToMany(mappedBy = "purchase")
+    private List<ProductInPurchase> pInPurchase;
 }
