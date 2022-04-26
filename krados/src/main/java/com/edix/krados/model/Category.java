@@ -22,4 +22,9 @@ public class Category {
     private String name;
     @OneToMany(mappedBy = "category")
     private List<Product> productList;
+    
+    @Override
+    public String toString() {
+    	return "Categoria [id=" + id + ", nombre=" + name + "]";
+    }
 }

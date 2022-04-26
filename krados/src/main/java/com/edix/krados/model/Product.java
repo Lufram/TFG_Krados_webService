@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -29,4 +30,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<ProductInPurchase> pInPurchase;
+    
+    @Override
+    public String toString() {
+    	return "Producto [id=" + id + ", nombre=" + name + ", info=" + info + ", uPrice=" + uPrice + ", categoria="+ category +"]";
+    }
 }
