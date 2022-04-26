@@ -23,7 +23,10 @@ public class ProdController {
 
 	    @Autowired
 	    private ProductRepository productRepository;
-
+	    
+	    // TODO
+	    // Terminar endpoints
+	    
 	    @GetMapping
 	    public List<Product> listProducts(){
 	    	List<Product> productos = productRepository.findAll();
