@@ -10,11 +10,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-	//TODO
-	//Develop find by name (contain)
-	//Develop find by category id
-	//Search more methods
+
 	public List<Product> findAll();
-//	public List<Product> findByContaining(String name);
-//	public List<Product> findByCategoryId(int category_id);
+	public List<Product> findByNameContaining(String name);
+	public List<Product> findByCategoryId(int categoryId);
+	public Product findByName(String name);
 }

@@ -6,12 +6,16 @@ import java.beans.PropertyDescriptor;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.edix.krados.model.Product;
@@ -24,91 +28,60 @@ public class ProdController {
 	    @Autowired
 	    private ProductRepository productRepository;
 	    
-	    // TODO
-	    // Terminar endpoints
 	    
 	    @GetMapping
 	    public List<Product> listProducts(){
 	    	List<Product> productos = productRepository.findAll();
-	    	System.out.println(productos.toString());
+	    	//System.out.println(productos.toString());
 	        return productos;
 	    }
 
-//	    @GetMapping("/{id}")
-//	    public ResponseEntity<PublicationDTO>  getPublicationById(@PathVariable (name = "id") long id){
-//	        return ResponseEntity.ok(publicationService.getPublicationById(id));
-//	    }
-//
-//	    @PostMapping
-//	    public ResponseEntity<PublicationDTO>  savePublication(@RequestBody PublicationDTO publicationDTO ){
-//	        return new ResponseEntity<>(publicationService.addPublication(publicationDTO), HttpStatus.CREATED);
-//	    }
-//
-//	    @PutMapping("/{id}")
-//	    public ResponseEntity<PublicationDTO> updatePublication(@RequestBody PublicationDTO publicationDTO,
-//	                                                            @PathVariable(name = "id") long id){
-//	        PublicationDTO publicationResponse = publicationService.updatePublication(publicationDTO, id);
-//	        return new ResponseEntity<>(publicationResponse, HttpStatus.OK);
-//	    }
-//
-//	    @DeleteMapping("/{id}")
-//	    public ResponseEntity<String> deletePublication(@PathVariable (name = "id") long id){
-//	        publicationService.deletePublication(id);
-//	        return new ResponseEntity<>("Publicacion eliminada con exito", HttpStatus.OK);
-//	    }
+	    @GetMapping("/{name}") 
+	    public ResponseEntity<List<Product>>getProductByName(@PathVariable ("name") String name){
+	    	List<Product> p = productRepository.findByNameContaining(name);
+	    	if(!p.isEmpty()) {
+	    		return ResponseEntity.ok(productRepository.findByNameContaining(name));
+	    	} else {
+	    		return new ResponseEntity<List<Product>>(HttpStatus.NOT_FOUND);
+	    	}
+	    }
 	    
-	    public static String objectToJson(Object object) {   
-	         StringBuilder json = new StringBuilder();   
-	        if (object == null) {   
-	             json.append("\"\"");   
-	         } else if (object instanceof String || object instanceof Integer) { 
-	             json.append("\"").append(object.toString()).append("\"");  
-	         } else {   
-	             json.append(beanToJson(object));   
-	         }   
-	        return json.toString();   
-	     }  
+	    @GetMapping("/categoryId") 
+	    public ResponseEntity<List<Product>>getProductByCategoryId(@RequestParam (name = "categoryId") int categoryId ){
+	    	List<Product> p = productRepository.findByCategoryId(categoryId);
+	    	if(!p.isEmpty()) {
+	    		return ResponseEntity.ok(productRepository.findByCategoryId(categoryId));
+	    	} else {
+	    		return new ResponseEntity<List<Product>>(HttpStatus.NOT_FOUND);
+	    	}
+	    }
+
+	    @PostMapping
+	    public ResponseEntity<Product>  saveProduct(@RequestBody Product p ){
+	    	if(p.getName().isEmpty() || p.getInfo().isEmpty() || p.getuPrice() == 0 || p.getCategory().getId() == 0 || productRepository.findByName(p.getName()) !=null) {
+	    		return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
+	    	}
+	        return new ResponseEntity<Product>(productRepository.save(p), HttpStatus.CREATED);
+	    }
 	    
-	    public static String beanToJson(Object bean) {   
-	         StringBuilder json = new StringBuilder();   
-	         json.append("{");   
-	         PropertyDescriptor[] props = null;   
-	        try {   
-	             props = Introspector.getBeanInfo(bean.getClass(), Object.class)   
-	                     .getPropertyDescriptors();   
-	         } catch (IntrospectionException e) {   
-	         }   
-	        if (props != null) {   
-	            for (int i = 0; i < props.length; i++) {   
-	                try {  
-	                     String name = objectToJson(props[i].getName());   
-	                     String value = objectToJson(props[i].getReadMethod().invoke(bean));  
-	                     json.append(name);   
-	                     json.append(":");   
-	                     json.append(value);   
-	                     json.append(",");  
-	                 } catch (Exception e) {   
-	                 }   
-	             }   
-	             json.setCharAt(json.length() - 1, '}');   
-	         } else {   
-	             json.append("}");   
-	         }   
-	        return json.toString();   
-	     }   
-	    
-	    public static String listToJson(List<?> list) {   
-	         StringBuilder json = new StringBuilder();   
-	         json.append("[");   
-	        if (list != null && list.size() > 0) {   
-	            for (Object obj : list) {   
-	                 json.append(objectToJson(obj));   
-	                 json.append(",");   
-	             }   
-	             json.setCharAt(json.length() - 1, ']');   
-	         } else {   
-	             json.append("]");   
-	         }   
-	        return json.toString();   
-	     }
+	    @PutMapping("/{id}")
+	    public ResponseEntity<Product>  updateProduct(@PathVariable (name = "id") long id,@RequestBody Product p ){
+	    	if(p.getName().isEmpty() || p.getInfo().isEmpty() || p.getuPrice() == 0 || p.getCategory().getId() == 0 || productRepository.findById(id).isEmpty()) {
+	    		return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
+	    	}else {
+	    		productRepository.deleteById(id);
+	    		return new ResponseEntity<Product>(productRepository.save(p), HttpStatus.CREATED);	    		
+	    	}
+	    }
+
+	    @DeleteMapping("/{name}")
+	    public ResponseEntity<Product> deleteProduct(@PathVariable (name = "name") String name){
+	    	Product p = productRepository.findByName(name);
+	    	if (p != null) {
+	    		productRepository.delete(p);
+	    		return new ResponseEntity<Product>(p, HttpStatus.OK);
+	    	}else {
+	    		return new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
+	    	}
+	    }
 }

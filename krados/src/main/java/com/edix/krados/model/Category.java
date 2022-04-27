@@ -23,7 +23,33 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private List<Product> productList;
     
-    @Override
+    
+    
+    public int getId() {
+		return id;
+	}
+
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
+
+	public String getName() {
+		return name;
+	}
+
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+
+	@Override
     public String toString() {
     	return "Categoria [id=" + id + ", nombre=" + name + "]";
     }
