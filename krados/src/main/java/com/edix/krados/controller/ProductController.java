@@ -23,7 +23,7 @@ import com.edix.krados.repository.ProductRepository;
 
 @RestController
 @RequestMapping("/krados/products")
-public class ProdController {
+public class ProductController {
 
 	    @Autowired
 	    private ProductRepository productRepository;
