@@ -17,9 +17,62 @@ import java.util.List;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     @Column(name = "name", nullable = false)
     private String name;
     @OneToMany(mappedBy = "category")
     private List<Product> productList;
+    
+    
+    
+    public Category() {
+		super();
+	}
+
+    
+
+	public Category(Long id, String name, List<Product> productList) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.productList = productList;
+	}
+
+
+
+	public Category(String name) {
+		super();
+		this.name = name;
+	}
+
+
+
+	public Long getId() {
+		return id;
+	}
+
+
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
+
+	public String getName() {
+		return name;
+	}
+
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+
+	@Override
+    public String toString() {
+    	return "Categoria [id=" + id + ", nombre=" + name + "]";
+    }
 }
