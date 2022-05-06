@@ -43,13 +43,13 @@ public static final String FILE_NAME = "./BBDDData/ProductData.txt";
 					p.setName(data[1]);
 					p.setuPrice(Double.parseDouble(data[2]));
 //					Category c = categoryRepository.findById(Long.parseLong(data[3]) ).orElse(null);
-					if(c == null) {
-						System.out.println("No existe esta categoria");
-					}else {
-						p.setCategory(c);
-						System.out.println(p.toString());
+//					if(c == null) {
+//						System.out.println("No existe esta categoria");
+//					}else {
+//						p.setCategory(c);
+//						System.out.println(p.toString());
 //						categoryRepository.save(c);	
-					}
+//					}
 					
 				}
 				System.out.println("Fichero leido correctamente");

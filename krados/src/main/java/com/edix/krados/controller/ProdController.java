@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,18 +30,18 @@ public class ProdController {
 	    private ProductRepository productRepository;
 	    
 	    
-	    @GetMapping
+	    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	    public List<Product> listProducts(){
 	    	List<Product> productos = productRepository.findAll();
 	    	//System.out.println(productos.toString());
 	        return productos;
 	    }
 
-	    @GetMapping("/{name}") 
+	    @GetMapping(path="findByName/{name}") 
 	    public ResponseEntity<List<Product>>getProductByName(@PathVariable ("name") String name){
 	    	List<Product> p = productRepository.findByNameContaining(name);
 	    	if(!p.isEmpty()) {
-	    		return ResponseEntity.ok(productRepository.findByNameContaining(name));
+	    		return ResponseEntity.ok(p);
 	    	} else {
 	    		return new ResponseEntity<List<Product>>(HttpStatus.NOT_FOUND);
 	    	}
