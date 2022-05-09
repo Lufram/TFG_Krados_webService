@@ -10,10 +10,6 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
 @Table(name = "product")
 public class Product {
     @Id
@@ -30,14 +26,10 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<ProductInPurchase> pInPurchase;
-    
-    
 
 	public Product() {
 		super();
 	}
-
-
 
 	public Product(Long id, String name, String info, double uPrice, Category category,
 			List<ProductInPurchase> pInPurchase) {
@@ -50,8 +42,6 @@ public class Product {
 		this.pInPurchase = pInPurchase;
 	}
 
-
-
 	public Product(String name, String info, double uPrice, Category category) {
 		super();
 		this.name = name;
@@ -60,68 +50,45 @@ public class Product {
 		this.category = category;
 	}
 
-
-
 	public Long getId() {
 		return id;
 	}
-
-
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-
-
 	public String getName() {
 		return name;
 	}
-
-
 
 	public void setName(String name) {
 		this.name = name;
 	}
 
-
-
 	public String getInfo() {
 		return info;
 	}
-
-
 
 	public void setInfo(String info) {
 		this.info = info;
 	}
 
-
-
 	public double getuPrice() {
 		return uPrice;
 	}
-
-
 
 	public void setuPrice(double uPrice) {
 		this.uPrice = uPrice;
 	}
 
-
-
 	public Category getCategory() {
 		return category;
 	}
 
-
-
 	public void setCategory(Category category) {
 		this.category = category;
 	}
-
-
-
 
 	@Override
     public String toString() {

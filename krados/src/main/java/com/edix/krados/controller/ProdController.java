@@ -1,8 +1,5 @@
 package com.edix.krados.controller;
 
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +25,10 @@ public class ProdController {
 
 	    @Autowired
 	    private ProductRepository productRepository;
-	    
-	    
+
 	    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	    public List<Product> listProducts(){
 	    	List<Product> productos = productRepository.findAll();
-	    	//System.out.println(productos.toString());
 	        return productos;
 	    }
 
