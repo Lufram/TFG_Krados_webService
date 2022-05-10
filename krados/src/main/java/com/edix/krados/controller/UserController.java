@@ -3,9 +3,7 @@ package com.edix.krados.controller;
 import com.edix.krados.model.Role;
 import com.edix.krados.model.User;
 import com.edix.krados.service.UserService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -41,11 +39,4 @@ public class UserController {
         userService.addRoleToUser(form.getUsername(), form.getRolename());
         return ResponseEntity.ok().build();
     }
-}
-
-
-@Data
-class RoleToUserForm {
-    private String username;
-    private String rolename;
 }

@@ -6,18 +6,23 @@ import com.edix.krados.repository.RoleRepository;
 import com.edix.krados.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Transactional @Slf4j
-@RequiredArgsConstructor
+@Transactional
+@Slf4j
 public class UserServiceImp implements UserService{
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private  RoleRepository roleRepository;
 
     @Override
     public User saveUser(User user) {
