@@ -50,11 +50,11 @@ public class ProdController {
 	    	}
 	    }
 	    
-	    @GetMapping("/categoryId") 
-	    public ResponseEntity<List<Product>>getProductByCategoryId(@RequestParam (name = "categoryId") int categoryId ){
+	    @GetMapping(path="findByCategory/{categoryId}")
+	    public ResponseEntity<List<Product>>getProductByCategoryId(@PathVariable ("categoryId") int categoryId ){
 	    	List<Product> p = productRepository.findByCategoryId(categoryId);
 	    	if(!p.isEmpty()) {
-	    		return ResponseEntity.ok(productRepository.findByCategoryId(categoryId));
+	    		return ResponseEntity.ok(p);
 	    	} else {
 	    		return new ResponseEntity<List<Product>>(HttpStatus.NOT_FOUND);
 	    	}
