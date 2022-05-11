@@ -2,6 +2,10 @@ package com.edix.krados.controller;
 
 import java.util.List;
 
+import com.edix.krados.model.Cart;
+import com.edix.krados.model.ProductInCart;
+import com.edix.krados.repository.CartRepository;
+import com.edix.krados.repository.ProductInCartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +29,10 @@ public class ProdController {
 
 	    @Autowired
 	    private ProductRepository productRepository;
+		@Autowired
+		private CartRepository cartRepository;
+		@Autowired
+		private ProductInCartRepository pCartRepository;
 
 	    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	    public List<Product> listProducts(){
@@ -59,8 +67,56 @@ public class ProdController {
 	    	}
 	        return new ResponseEntity<Product>(productRepository.save(p), HttpStatus.CREATED);
 	    }
-	    
-	    @PutMapping("/{id}")
+
+		@PostMapping("/productInCar")
+		public ResponseEntity<Product>  addProductToCart(
+				@RequestParam (name = "cartId") Long cartId,
+				@RequestParam (name = "productId") Long productId,
+				@RequestParam (name = "amount") int amount ){
+			Cart c = cartRepository.getById(cartId);
+			Product p = productRepository.getById(productId);
+
+			ProductInCart pCart = new ProductInCart();
+			pCart.setCart(c);
+			pCart.setProduct(p);
+			pCart.setAmount(amount);
+			pCartRepository.save(pCart);
+
+			return new ResponseEntity<Product>(p, HttpStatus.CREATED);
+		}
+
+		@PutMapping("/productInCart")
+		public ResponseEntity<ProductInCart>  modifyProductToCart(
+				@RequestParam (name = "cartId") Long cartId,
+				@RequestParam (name = "productId") Long productId,
+				@RequestParam (name = "amount") int amount ){
+			ProductInCart pCart = (ProductInCart) pCartRepository.findByProductAndCart(cartId, productId);
+			if(pCart == null){
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}else {
+				if (amount < 1) {
+					pCartRepository.delete(pCart);
+				} else {
+					pCart.setAmount(amount);
+				}
+			}
+			return new ResponseEntity<ProductInCart>(pCart, HttpStatus.ACCEPTED);
+		}
+
+		@DeleteMapping("/productInCart")
+		public ResponseEntity<ProductInCart>  deleteProductToCart(
+				@RequestParam (name = "cartId") Long cartId,
+				@RequestParam (name = "productId") Long productId ){
+			ProductInCart pCart = (ProductInCart) pCartRepository.findByProductAndCart(cartId, productId);
+			if(pCart == null){
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}else {
+				pCartRepository.delete(pCart);
+			}
+			return new ResponseEntity<ProductInCart>(pCart, HttpStatus.ACCEPTED);
+		}
+
+		@PutMapping("/{id}")
 	    public ResponseEntity<Product>  updateProduct(@PathVariable (name = "id") long id,@RequestBody Product p ){
 	    	if(p.getName().isEmpty() || p.getInfo().isEmpty() || p.getuPrice() == 0 || p.getCategory().getId() == 0 || productRepository.findById(id).isEmpty()) {
 	    		return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);

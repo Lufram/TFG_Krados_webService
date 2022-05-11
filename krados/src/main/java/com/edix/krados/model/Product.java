@@ -27,6 +27,10 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<ProductInPurchase> pInPurchase;
 
+	@OneToMany(mappedBy = "product")
+	private List<ProductInCart> pInCart;
+
+
 	public Product() {
 		super();
 	}

@@ -33,15 +33,16 @@ public class KradosApplication {
 //			userService.saveUser(new User(null, "Arnold", "Arnold@mailito.es", "1234", new ArrayList<>()));
 //			userService.saveUser(new User(null, "admin", "admin", "1234", new ArrayList<>()));
 
-			userService.addRoleToUser("John@mailito.es","ROLE_USER");
-			userService.addRoleToUser("Will@mailito.es","ROLE_USER");
-			userService.addRoleToUser("Jim@mailito.es","ROLE_MANAGER");
-			userService.addRoleToUser("Arnold@mailito.es","ROLE_USER");
+//			userService.addRoleToUser("John@mailito.es","ROLE_USER");
+//			userService.addRoleToUser("Will@mailito.es","ROLE_USER");
+//			userService.addRoleToUser("Jim@mailito.es","ROLE_MANAGER");
+//			userService.addRoleToUser("Arnold@mailito.es","ROLE_USER");
+//
+//			userService.addRoleToUser("admin","ROLE_USER");
+//			userService.addRoleToUser("admin","ROLE_MANAGER");
+//			userService.addRoleToUser("admin","ROLE_ADMIN");
+//			userService.addRoleToUser("admin","ROLE_SUPER_ADMIN");
 
-			userService.addRoleToUser("admin","ROLE_USER");
-			userService.addRoleToUser("admin","ROLE_MANAGER");
-			userService.addRoleToUser("admin","ROLE_ADMIN");
-			userService.addRoleToUser("admin","ROLE_SUPER_ADMIN");
 		};
 	}
 }

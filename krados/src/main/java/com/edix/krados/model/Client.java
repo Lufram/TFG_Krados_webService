@@ -29,7 +29,6 @@ public class Client {
     private Date burnDate;
     @Embedded
     private Address address;
-   
     @OneToMany(mappedBy = "client")
     private List<Purchase> purchaseList;
 }
