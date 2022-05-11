@@ -14,6 +14,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	public List<Product> findAll();
 	public List<Product> findByNameContaining(@Param("name") String name);
-	public List<Product> findByCategoryId(int categoryId);
 	public Product findByName(String name);
 }
