@@ -66,13 +66,20 @@ public class ProdController {
 	}
 
 	@GetMapping("/productInCar")
-	public ResponseEntity<List<Product>>  getAllProductInCart(
+	public ResponseEntity<List<ProductInCartForm>>  getAllProductInCart(
 			@RequestParam (name = "cartId") Long cartId){
 		if(cartRepository.existsById(cartId)) {
 			Cart cart = cartRepository.getById(cartId);
-			List<Product> prodlist = new ArrayList<>();
+			List<ProductInCartForm> prodlist = new ArrayList<>();
 			for (ProductInCart p : cart.getPInCart()) {
-				prodlist.add(p.getProduct());
+				ProductInCartForm pf = new ProductInCartForm();
+				pf.setId(p.getId());
+				pf.setName(productRepository.findById(p.getId()).get().getName());
+				pf.setInfo(productRepository.findById(p.getId()).get().getInfo());
+				pf.setUPrice(productRepository.findById(p.getId()).get().getuPrice());
+				pf.setAmount(p.getAmount());
+
+				prodlist.add(pf);
 			}
 			return new ResponseEntity<>(prodlist, HttpStatus.CREATED);
 		} else {
