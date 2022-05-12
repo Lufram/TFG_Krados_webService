@@ -65,9 +65,9 @@ public class ProdController {
 		return new ResponseEntity<Product>(productRepository.save(p), HttpStatus.CREATED);
 	}
 
-	@GetMapping("/productInCar")
+	@GetMapping("/productInCart/{cartId}")
 	public ResponseEntity<List<ProductInCartForm>>  getAllProductInCart(
-			@RequestParam (name = "cartId") Long cartId){
+			@PathVariable ("cartId") Long cartId){
 		if(cartRepository.existsById(cartId)) {
 			Cart cart = cartRepository.getById(cartId);
 			List<ProductInCartForm> prodlist = new ArrayList<>();
