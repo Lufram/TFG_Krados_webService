@@ -57,6 +57,24 @@ public class ProdController {
 		}
 	}
 
+	@GetMapping(path="findByCategory/{categoryId}")
+	public ResponseEntity<List<Product>> getProductByCategoryId(
+			@PathVariable ("categoryId") Long categoryId,
+			@RequestParam (name = "name") String pName){
+		List<Product> plCategory = categoryRepository.findById(categoryId).get().getProductList();
+		List<Product> plCategoryAndName = new ArrayList<>();
+		if(!plCategory.isEmpty()) {
+			for (Product pro: plCategory){
+				if (pro.getName().contains(pName)){
+					plCategoryAndName.add(pro);
+				}
+			}
+			return ResponseEntity.ok(plCategoryAndName);
+		} else {
+			return new ResponseEntity<List<Product>>(HttpStatus.NOT_FOUND);
+		}
+	}
+
 	@PostMapping
 	public ResponseEntity<Product>  saveProduct(@RequestBody Product p ){
 		if(p.getName().isEmpty() || p.getInfo().isEmpty() || p.getuPrice() == 0 || p.getCategory().getId() == 0 || productRepository.findByName(p.getName()) !=null) {
@@ -85,7 +103,6 @@ public class ProdController {
 		} else {
 			return new ResponseEntity<>( HttpStatus.NOT_FOUND);
 		}
-
 	}
 
 	@PostMapping("/productInCar")
@@ -110,7 +127,7 @@ public class ProdController {
 			@RequestParam (name = "cartId") Long cartId,
 			@RequestParam (name = "productId") Long productId,
 			@RequestParam (name = "amount") int amount ){
-		ProductInCart pCart = (ProductInCart) pCartRepository.findByProductAndCart(cartId, productId);
+		ProductInCart pCart = pCartRepository.findByProductIdAndCartId(cartId, productId);
 		if(pCart == null){
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else {
@@ -127,7 +144,7 @@ public class ProdController {
 	public ResponseEntity<ProductInCart>  deleteProductToCart(
 			@RequestParam (name = "cartId") Long cartId,
 			@RequestParam (name = "productId") Long productId ){
-		ProductInCart pCart = (ProductInCart) pCartRepository.findByProductAndCart(cartId, productId);
+		ProductInCart pCart = (ProductInCart) pCartRepository.findByProductIdAndCartId(cartId, productId);
 		if(pCart == null){
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else {

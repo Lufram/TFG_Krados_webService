@@ -1,5 +1,6 @@
 package com.edix.krados.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class ProductInCart {
     private int amount;
     @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonIgnore
     private Cart cart;
     @ManyToOne
     @JoinColumn(name = "product_id")
