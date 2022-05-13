@@ -1,10 +1,12 @@
 package com.edix.krados.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,6 +22,7 @@ public class Product {
     private String info;
     @Column(name = "unity_price", nullable = false)
     private double uPrice;
+	@JsonIgnore
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;

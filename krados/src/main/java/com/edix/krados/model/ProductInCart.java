@@ -17,7 +17,7 @@ public class ProductInCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private double amount;
+    private int amount;
     @ManyToOne
     @JoinColumn(name = "cart_id")
     private Cart cart;
