@@ -57,7 +57,7 @@ public class ProdController {
 		}
 	}
 
-	@PostMapping
+	@PostMapping(path="add/")
 	public ResponseEntity<Product>  saveProduct(@RequestBody Product p ){
 		if(p.getName().isEmpty() || p.getInfo().isEmpty() || p.getuPrice() == 0 || p.getCategory().getId() == 0 || productRepository.findByName(p.getName()) !=null) {
 			return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
@@ -81,11 +81,10 @@ public class ProdController {
 
 				prodlist.add(pf);
 			}
-			return new ResponseEntity<>(prodlist, HttpStatus.CREATED);
+			return new ResponseEntity<>(prodlist, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>( HttpStatus.NOT_FOUND);
 		}
-
 	}
 
 	@PostMapping("/productInCar")
@@ -114,11 +113,7 @@ public class ProdController {
 		if(pCart == null){
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}else {
-			if (amount < 1) {
-				pCartRepository.delete(pCart);
-			} else {
-				pCart.setAmount(amount);
-			}
+			pCart.setAmount(amount);
 		}
 		return new ResponseEntity<ProductInCart>(pCart, HttpStatus.ACCEPTED);
 	}

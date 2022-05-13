@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/krados")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;

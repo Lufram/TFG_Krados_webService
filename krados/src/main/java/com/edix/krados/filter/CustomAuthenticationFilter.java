@@ -4,6 +4,7 @@ package com.edix.krados.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.edix.krados.model.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,10 +18,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -35,7 +36,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        log.info("Username is: {}", username); log.info("Password is: {}", password);
+        log.info("Username is: {}", username);
+        log.info("Password is: {}", password);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         return authenticationManager.authenticate(authenticationToken);
     }
@@ -61,9 +63,15 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withExpiresAt(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
                 .sign(algorithm);
-
+        /*
         response.setHeader("access_token", access_token);
-        response.setHeader("refresh_token", refresh_token);
+        response.setHeader("refresh_token", refresh_token);*/
+
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("access_token", access_token);
+        tokens.put("refresh_token", refresh_token);
+        response.setContentType(APPLICATION_JSON_VALUE);
+        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }
 
 
