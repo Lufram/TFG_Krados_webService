@@ -2,7 +2,7 @@ package com.edix.krados.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.Optional;
 
 import com.edix.krados.model.Cart;
 import com.edix.krados.model.ProductInCart;
@@ -57,9 +57,9 @@ public class ProdController {
 		}
 	}
 
-	@GetMapping(path="findByCategory/{categoryId}")
+	@GetMapping(path="findByCategoryAndName")
 	public ResponseEntity<List<Product>> getProductByCategoryId(
-			@PathVariable ("categoryId") Long categoryId,
+			@RequestParam (name = "categoryId") Long categoryId,
 			@RequestParam (name = "name") String pName){
 		List<Product> plCategory = categoryRepository.findById(categoryId).get().getProductList();
 		List<Product> plCategoryAndName = new ArrayList<>();
@@ -105,13 +105,13 @@ public class ProdController {
 		}
 	}
 
-	@PostMapping("/productInCar")
+	@PostMapping("/productInCart")
 	public ResponseEntity<Product>  addProductToCart(
 			@RequestParam (name = "cartId") Long cartId,
 			@RequestParam (name = "productId") Long productId,
 			@RequestParam (name = "amount") int amount ){
-		Cart c = cartRepository.getById(cartId);
-		Product p = productRepository.getById(productId);
+		Cart c = cartRepository.findById(cartId).get();
+		Product p = productRepository.findById(productId).get();
 
 		ProductInCart pCart = new ProductInCart();
 		pCart.setCart(c);
