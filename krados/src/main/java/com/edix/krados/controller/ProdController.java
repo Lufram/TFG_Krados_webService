@@ -2,7 +2,6 @@ package com.edix.krados.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import com.edix.krados.model.Cart;
 import com.edix.krados.model.ProductInCart;
@@ -43,7 +42,7 @@ public class ProdController {
 		if(!p.isEmpty()) {
 			return ResponseEntity.ok(p);
 		} else {
-			return new ResponseEntity<List<Product>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -53,16 +52,16 @@ public class ProdController {
 		if(!p.isEmpty()) {
 			return ResponseEntity.ok(p);
 		} else {
-			return new ResponseEntity<List<Product>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 
 	@PostMapping(path="add/")
 	public ResponseEntity<Product>  saveProduct(@RequestBody Product p ){
 		if(p.getName().isEmpty() || p.getInfo().isEmpty() || p.getuPrice() == 0 || p.getCategory().getId() == 0 || productRepository.findByName(p.getName()) !=null) {
-			return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<Product>(productRepository.save(p), HttpStatus.CREATED);
+		return new ResponseEntity<>(productRepository.save(p), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/productInCart/{cartId}")
@@ -101,7 +100,7 @@ public class ProdController {
 		pCart.setAmount(amount);
 		pCartRepository.save(pCart);
 
-		return new ResponseEntity<Product>(p, HttpStatus.CREATED);
+		return new ResponseEntity<>(p, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/productInCart")
@@ -115,7 +114,7 @@ public class ProdController {
 		}else {
 			pCart.setAmount(amount);
 		}
-		return new ResponseEntity<ProductInCart>(pCart, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(pCart, HttpStatus.ACCEPTED);
 	}
 
 	@DeleteMapping("/productInCart")
@@ -128,16 +127,16 @@ public class ProdController {
 		}else {
 			pCartRepository.delete(pCart);
 		}
-		return new ResponseEntity<ProductInCart>(pCart, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(pCart, HttpStatus.ACCEPTED);
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<Product>  updateProduct(@PathVariable (name = "id") long id,@RequestBody Product p ){
 		if(p.getName().isEmpty() || p.getInfo().isEmpty() || p.getuPrice() == 0 || p.getCategory().getId() == 0 || productRepository.findById(id).isEmpty()) {
-			return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}else {
 			productRepository.deleteById(id);
-			return new ResponseEntity<Product>(productRepository.save(p), HttpStatus.CREATED);
+			return new ResponseEntity<>(productRepository.save(p), HttpStatus.CREATED);
 		}
 	}
 
@@ -146,9 +145,9 @@ public class ProdController {
 		Product p = productRepository.findByName(name);
 		if (p != null) {
 			productRepository.delete(p);
-			return new ResponseEntity<Product>(p, HttpStatus.OK);
+			return new ResponseEntity<>(p, HttpStatus.OK);
 		}else {
-			return new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 }
