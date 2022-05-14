@@ -91,7 +91,7 @@ public class ProdController {
 			List<ProductInCartForm> prodlist = new ArrayList<>();
 			for (ProductInCart p : cart.getPInCart()) {
 				ProductInCartForm pf = new ProductInCartForm();
-				pf.setId(p.getId());
+				pf.setId(p.getProduct().getId());
 				pf.setName(productRepository.findById(p.getId()).get().getName());
 				pf.setInfo(productRepository.findById(p.getId()).get().getInfo());
 				pf.setUPrice(productRepository.findById(p.getId()).get().getuPrice());
@@ -135,6 +135,7 @@ public class ProdController {
 				pCartRepository.delete(pCart);
 			} else {
 				pCart.setAmount(amount);
+				pCartRepository.save(pCart);
 			}
 		}
 		return new ResponseEntity<ProductInCart>(pCart, HttpStatus.ACCEPTED);
