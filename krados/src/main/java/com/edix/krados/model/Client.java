@@ -15,7 +15,6 @@ import java.util.List;
 @Getter @Setter
 @Table(name = "client")
 public class Client {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,4 +30,6 @@ public class Client {
     private Address address;
     @OneToMany(mappedBy = "client")
     private List<Purchase> purchaseList;
+    @OneToOne(mappedBy = "client")
+    private Cart cart;
 }

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.edix.krados.model.Cart;
-import com.edix.krados.model.ProductInCart;
 import com.edix.krados.repository.CartRepository;
 import com.edix.krados.repository.CategoryRepository;
 import com.edix.krados.repository.ProductInCartRepository;
@@ -105,75 +103,4 @@ public class ProdController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	// Devuelve todos los productos del carrito
-	@GetMapping("/productInCart/{cartId}")
-	public ResponseEntity<List<ProductInCartForm>>  getAllProductInCart(
-			@PathVariable ("cartId") Long cartId){
-		if(cartRepository.existsById(cartId)) {
-			Cart cart = cartRepository.getById(cartId);
-			List<ProductInCartForm> prodlist = new ArrayList<>();
-			for (ProductInCart p : cart.getPInCart()) {
-				ProductInCartForm pf = new ProductInCartForm();
-				pf.setId(p.getProduct().getId());
-				pf.setName(productRepository.findById(p.getProduct().getId()).get().getName());
-				pf.setInfo(productRepository.findById(p.getProduct().getId()).get().getInfo());
-				pf.setUPrice(productRepository.findById(p.getProduct().getId()).get().getuPrice());
-				pf.setAmount(p.getAmount());
-
-				prodlist.add(pf);
-			}
-			return new ResponseEntity<>(prodlist, HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<>( HttpStatus.NOT_FOUND);
-		}
-	}
-	// Añade un producto al carrito
-	@PostMapping("/productInCart")
-	public ResponseEntity<Product>  addProductToCart(
-			@RequestParam (name = "cartId") Long cartId,
-			@RequestParam (name = "productId") Long productId,
-			@RequestParam (name = "amount") int amount ){
-		Cart c = cartRepository.findById(cartId).get();
-		Product p = productRepository.findById(productId).get();
-
-		ProductInCart pCart = new ProductInCart();
-		pCart.setCart(c);
-		pCart.setProduct(p);
-		pCart.setAmount(amount);
-		pCartRepository.save(pCart);
-
-		return new ResponseEntity<>(p, HttpStatus.CREATED);
-	}
-	// Actualiza la cantidad del producto en el carrito
-	@PutMapping("/productInCart")
-	public ResponseEntity<ProductInCart>  modifyProductToCart(
-			@RequestParam (name = "cartId") Long cartId,
-			@RequestParam (name = "productId") Long productId,
-			@RequestParam (name = "amount") int amount ){
-		List<ProductInCart> pCart = cartRepository.findById(cartId).get().getPInCart();
-		for (ProductInCart p : pCart) {
-			if(p.getProduct().getId().equals(productId)){
-				p.setAmount(amount);
-				pCartRepository.save(p);
-				return new ResponseEntity<>(p, HttpStatus.ACCEPTED);
-			}
-		}
-		return new ResponseEntity(productId, HttpStatus.BAD_REQUEST);
-	}
-	// Elimina un producto del carrito
-	@DeleteMapping("/productInCart")
-	public ResponseEntity<ProductInCart>  deleteProductToCart(
-			@RequestParam (name = "cartId") Long cartId,
-			@RequestParam (name = "productId") Long productId ){
-		List<ProductInCart> pCart = cartRepository.findById(cartId).get().getPInCart();
-		for (ProductInCart p : pCart) {
-			if(p.getProduct().getId().equals(productId)){
-				pCartRepository.delete(p);
-				return new ResponseEntity<>(p, HttpStatus.ACCEPTED);
-			}
-		}
-		return new ResponseEntity(productId, HttpStatus.BAD_REQUEST);
-	}
-
-
 }

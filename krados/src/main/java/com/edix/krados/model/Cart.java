@@ -19,7 +19,8 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @OneToMany(mappedBy = "cart")
     private List<ProductInCart> pInCart;
+    @OneToOne
+    private Client client;
 }

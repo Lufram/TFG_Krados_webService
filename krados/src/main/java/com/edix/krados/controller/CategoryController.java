@@ -2,7 +2,6 @@ package com.edix.krados.controller;
 
 
 import com.edix.krados.model.Category;
-import com.edix.krados.model.Product;
 import com.edix.krados.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
