@@ -92,9 +92,9 @@ public class ProdController {
 			for (ProductInCart p : cart.getPInCart()) {
 				ProductInCartForm pf = new ProductInCartForm();
 				pf.setId(p.getProduct().getId());
-				pf.setName(productRepository.findById(p.getId()).get().getName());
-				pf.setInfo(productRepository.findById(p.getId()).get().getInfo());
-				pf.setUPrice(productRepository.findById(p.getId()).get().getuPrice());
+				pf.setName(productRepository.findById(p.getProduct().getId()).get().getName());
+				pf.setInfo(productRepository.findById(p.getProduct().getId()).get().getInfo());
+				pf.setUPrice(productRepository.findById(p.getProduct().getId()).get().getuPrice());
 				pf.setAmount(p.getAmount());
 
 				prodlist.add(pf);
