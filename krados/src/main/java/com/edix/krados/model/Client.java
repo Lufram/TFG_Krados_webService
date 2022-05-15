@@ -32,4 +32,6 @@ public class Client {
     private List<Purchase> purchaseList;
     @OneToOne(mappedBy = "client")
     private Cart cart;
+    @OneToOne
+    private User user;
 }

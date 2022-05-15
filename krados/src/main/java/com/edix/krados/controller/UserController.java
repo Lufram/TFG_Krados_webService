@@ -4,6 +4,7 @@ import com.edix.krados.model.Client;
 import com.edix.krados.model.Role;
 import com.edix.krados.model.User;
 import com.edix.krados.repository.ClientRepository;
+import com.edix.krados.repository.UserRepository;
 import com.edix.krados.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private ClientRepository clientRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     // Devuelve todos los usuarios
     @GetMapping("/users")
@@ -49,7 +52,8 @@ public class UserController {
     }
     // devuelve la información personal y el carrito que correspode con el id de usuario
     @GetMapping("/client")
-    public ResponseEntity<Client>getClient(@RequestParam (name = "clientId") Long clientId){
-        return new ResponseEntity(clientRepository.getById(clientId), HttpStatus.OK);
+    public ResponseEntity<Client>getClient(@RequestParam (name = "userName") String userName){
+        User user = userRepository.findByUsername(userName);
+        return new ResponseEntity(user.getClient(), HttpStatus.OK);
     }
 }

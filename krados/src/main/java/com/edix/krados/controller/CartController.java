@@ -29,9 +29,9 @@ public class CartController {
 
     // Devuelve todos los productos del carrito
     @GetMapping("/productInCart/{cartId}")
-    public ResponseEntity<List<ProductInCartForm>>  getAllProductInCart(
-            @PathVariable ("cartId") Long cartId){
-        if(cartRepository.existsById(cartId)) {
+    public ResponseEntity<List<ProductInCartForm>> getAllProductInCart(
+            @PathVariable("cartId") Long cartId) {
+        if (cartRepository.existsById(cartId)) {
             Cart cart = cartRepository.getById(cartId);
             List<ProductInCartForm> prodlist = new ArrayList<>();
             for (ProductInCart p : cart.getPInCart()) {
@@ -46,21 +46,22 @@ public class CartController {
             }
             return new ResponseEntity<>(prodlist, HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>( HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     // Añade un producto al carrito
     @PostMapping("/productInCart")
-    public ResponseEntity<Product>  createProductToCart(
-            @RequestParam (name = "cartId") Long cartId,
-            @RequestParam (name = "productId") Long productId,
-            @RequestParam (name = "amount") int amount ){
+    public ResponseEntity<Product> createProductToCart(
+            @RequestParam(name = "cartId") Long cartId,
+            @RequestParam(name = "productId") Long productId,
+            @RequestParam(name = "amount") int amount) {
         Cart c = cartRepository.findById(cartId).get();
         Product p = productRepository.findById(productId).get();
-        if(c.getPInCart().contains(p)){
+        if (c.getPInCart().contains(p)) {
             List<ProductInCart> pCart = c.getPInCart();
             for (ProductInCart pic : pCart) {
-                if(pic.getProduct().getId().equals(productId)){
+                if (pic.getProduct().getId().equals(productId)) {
                     pic.setAmount(pic.getAmount() + amount);
                     pCartRepository.save(pic);
                     return new ResponseEntity<>(p, HttpStatus.ACCEPTED);
@@ -75,15 +76,16 @@ public class CartController {
 
         return new ResponseEntity<>(p, HttpStatus.CREATED);
     }
+
     // Actualiza la cantidad del producto en el carrito
     @PutMapping("/productInCart")
-    public ResponseEntity<ProductInCart>  updateProductToCart(
-            @RequestParam (name = "cartId") Long cartId,
-            @RequestParam (name = "productId") Long productId,
-            @RequestParam(name = "amount") int amount ){
+    public ResponseEntity<ProductInCart> updateProductToCart(
+            @RequestParam(name = "cartId") Long cartId,
+            @RequestParam(name = "productId") Long productId,
+            @RequestParam(name = "amount") int amount) {
         List<ProductInCart> pCart = cartRepository.findById(cartId).get().getPInCart();
         for (ProductInCart p : pCart) {
-            if(p.getProduct().getId().equals(productId)){
+            if (p.getProduct().getId().equals(productId)) {
                 p.setAmount(amount);
                 pCartRepository.save(p);
                 return new ResponseEntity<>(p, HttpStatus.ACCEPTED);
@@ -91,19 +93,51 @@ public class CartController {
         }
         return new ResponseEntity(productId, HttpStatus.BAD_REQUEST);
     }
+
     // Elimina un producto del carrito
     @DeleteMapping("/productInCart")
-    public ResponseEntity<ProductInCart>  deleteProductToCart(
-            @RequestParam (name = "cartId") Long cartId,
-            @RequestParam (name = "productId") Long productId ){
+    public ResponseEntity<ProductInCart> deleteProductToCart(
+            @RequestParam(name = "cartId") Long cartId,
+            @RequestParam(name = "productId") Long productId) {
         List<ProductInCart> pCart = cartRepository.findById(cartId).get().getPInCart();
         for (ProductInCart p : pCart) {
-            if(p.getProduct().getId().equals(productId)){
+            if (p.getProduct().getId().equals(productId)) {
                 pCartRepository.delete(p);
                 return new ResponseEntity<>(p, HttpStatus.ACCEPTED);
             }
         }
         return new ResponseEntity(productId, HttpStatus.BAD_REQUEST);
     }
+
+    // Elimina un carrito
+    @DeleteMapping("/deleteCart")
+    public ResponseEntity<Cart> deleteAllCart(
+            @RequestParam(name = "cartId") Long cartId) {
+        if (cartRepository.existsById(cartId)) {
+            Cart currentCart = cartRepository.findById(cartId).get();
+            cartRepository.delete(currentCart);
+            return new ResponseEntity<>(currentCart, HttpStatus.ACCEPTED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+    }
+    // Elimina los productos de un carrito
+    @DeleteMapping("/deleteProductsInCart")
+    public ResponseEntity<List<ProductInCart>> deleteAllProductInCart(
+            @RequestParam(name = "cartId") Long cartId) {
+        if (cartRepository.existsById(cartId)) {
+            List<ProductInCart> pCart = cartRepository.findById(cartId).get().getPInCart();
+            for (ProductInCart p : pCart) {
+                    pCartRepository.delete(p);
+                }
+            return new ResponseEntity<>(pCart, HttpStatus.ACCEPTED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+
 
 }
