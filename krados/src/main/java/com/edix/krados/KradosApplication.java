@@ -39,12 +39,12 @@ public class KradosApplication {
 //			userService.saveUser(new User(null, "Will", "Will@mailito.es", "1234", new ArrayList<>()));
 //			userService.saveUser(new User(null, "Jim", "Jim@mailito.es", "1234", new ArrayList<>()));
 //			userService.saveUser(new User(null, "Arnold", "Arnold@mailito.es", "1234", new ArrayList<>()));
-//			userService.saveUser(new User(null, "admin", "admin", "1234", new ArrayList<>()));
-
+//			userService.saveUser(new User(null, "fulano", "fulano@mailito.es", "1234", new ArrayList<>()));
+//
 //			userService.addRoleToUser("John@mailito.es","ROLE_USER");
 //			userService.addRoleToUser("Will@mailito.es","ROLE_USER");
 //			userService.addRoleToUser("Jim@mailito.es","ROLE_MANAGER");
-//			userService.addRoleToUser("Arnold@mailito.es","ROLE_USER");
+//			userService.addRoleToUser("fulano@mailito.es","ROLE_USER");
 //
 //			userService.addRoleToUser("admin","ROLE_USER");
 //			userService.addRoleToUser("admin","ROLE_MANAGER");
