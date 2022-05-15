@@ -31,32 +31,63 @@ public class ProdController {
 	@Autowired
 	private CategoryRepository categoryRepository;
 
+	// Devuelve todos los productos
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Product> listProducts(){
 		List<Product> productos = productRepository.findAll();
 		return productos;
 	}
-
+	// Añade un producto a la BBDD
+	@PostMapping
+	public ResponseEntity<Product>  createProduct(@RequestBody Product p ){
+		if(p.getName().isEmpty() || p.getInfo().isEmpty() ||
+				p.getuPrice() == 0 || p.getCategory().getId() == 0 || productRepository.findByName(p.getName()) !=null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(productRepository.save(p), HttpStatus.CREATED);
+	}
+	// Elimina un producto por id
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Product> deleteProduct(@PathVariable ("id") Long id){
+		Optional<Product> p = productRepository.findById(id);
+		if (p.isPresent()) {
+			productRepository.deleteById(id);
+			return new ResponseEntity(p, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	// Actualiza la informacion de un producto
+	@PutMapping("/{id}")
+	public ResponseEntity<Product>  updateProduct(@PathVariable (name = "id") long id,@RequestBody Product p ){
+		if(p.getName().isEmpty() || p.getInfo().isEmpty() || p.getuPrice() == 0 || p.getCategory().getId() == 0 || productRepository.findById(id).isEmpty()) {
+			return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
+		}else {
+			productRepository.deleteById(id);
+			return new ResponseEntity<Product>(productRepository.save(p), HttpStatus.CREATED);
+		}
+	}
+	// Devuelve todos los productos que contengan el texto
 	@GetMapping(path="findByName/{name}")
 	public ResponseEntity<List<Product>>getProductByName(@PathVariable ("name") String name){
 		List<Product> p = productRepository.findByNameContaining(name);
 		if(!p.isEmpty()) {
 			return ResponseEntity.ok(p);
 		} else {
-			return new ResponseEntity<List<Product>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-
+	// Devuelve todos los productos que pertenezcan a una categoria pasandole un id de categoría
 	@GetMapping(path="findByCategory/{categoryId}")
 	public ResponseEntity<List<Product>> getProductByCategoryId(@PathVariable ("categoryId") Long categoryId ){
 		List<Product> p = categoryRepository.findById(categoryId).get().getProductList();
 		if(!p.isEmpty()) {
 			return ResponseEntity.ok(p);
 		} else {
-			return new ResponseEntity<List<Product>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-
+	// Devuelve todos los productos de una categoría filtrando por nombre
 	@GetMapping(path="findByCategoryAndName")
 	public ResponseEntity<List<Product>> getProductByCategoryId(
 			@RequestParam (name = "categoryId") Long categoryId,
@@ -71,18 +102,10 @@ public class ProdController {
 			}
 			return ResponseEntity.ok(plCategoryAndName);
 		} else {
-			return new ResponseEntity<List<Product>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-
-	@PostMapping
-	public ResponseEntity<Product>  saveProduct(@RequestBody Product p ){
-		if(p.getName().isEmpty() || p.getInfo().isEmpty() || p.getuPrice() == 0 || p.getCategory().getId() == 0 || productRepository.findByName(p.getName()) !=null) {
-			return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<Product>(productRepository.save(p), HttpStatus.CREATED);
-	}
-
+	// Devuelve todos los productos del carrito
 	@GetMapping("/productInCart/{cartId}")
 	public ResponseEntity<List<ProductInCartForm>>  getAllProductInCart(
 			@PathVariable ("cartId") Long cartId){
@@ -104,7 +127,7 @@ public class ProdController {
 			return new ResponseEntity<>( HttpStatus.NOT_FOUND);
 		}
 	}
-
+	// Añade un producto al carrito
 	@PostMapping("/productInCart")
 	public ResponseEntity<Product>  addProductToCart(
 			@RequestParam (name = "cartId") Long cartId,
@@ -119,59 +142,38 @@ public class ProdController {
 		pCart.setAmount(amount);
 		pCartRepository.save(pCart);
 
-		return new ResponseEntity<Product>(p, HttpStatus.CREATED);
+		return new ResponseEntity<>(p, HttpStatus.CREATED);
 	}
-
+	// Actualiza la cantidad del producto en el carrito
 	@PutMapping("/productInCart")
 	public ResponseEntity<ProductInCart>  modifyProductToCart(
 			@RequestParam (name = "cartId") Long cartId,
 			@RequestParam (name = "productId") Long productId,
 			@RequestParam (name = "amount") int amount ){
-		ProductInCart pCart = pCartRepository.findByProductIdAndCartId(cartId, productId);
-		if(pCart == null){
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}else {
-			if (amount < 1) {
-				pCartRepository.delete(pCart);
-			} else {
-				pCart.setAmount(amount);
-				pCartRepository.save(pCart);
+		List<ProductInCart> pCart = cartRepository.findById(cartId).get().getPInCart();
+		for (ProductInCart p : pCart) {
+			if(p.getProduct().getId().equals(productId)){
+				p.setAmount(amount);
+				pCartRepository.save(p);
+				return new ResponseEntity<>(p, HttpStatus.ACCEPTED);
 			}
 		}
-		return new ResponseEntity<ProductInCart>(pCart, HttpStatus.ACCEPTED);
+		return new ResponseEntity(productId, HttpStatus.BAD_REQUEST);
 	}
-
+	// Elimina un producto del carrito
 	@DeleteMapping("/productInCart")
 	public ResponseEntity<ProductInCart>  deleteProductToCart(
 			@RequestParam (name = "cartId") Long cartId,
 			@RequestParam (name = "productId") Long productId ){
-		ProductInCart pCart = (ProductInCart) pCartRepository.findByProductIdAndCartId(cartId, productId);
-		if(pCart == null){
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}else {
-			pCartRepository.delete(pCart);
+		List<ProductInCart> pCart = cartRepository.findById(cartId).get().getPInCart();
+		for (ProductInCart p : pCart) {
+			if(p.getProduct().getId().equals(productId)){
+				pCartRepository.delete(p);
+				return new ResponseEntity<>(p, HttpStatus.ACCEPTED);
+			}
 		}
-		return new ResponseEntity<ProductInCart>(pCart, HttpStatus.ACCEPTED);
+		return new ResponseEntity(productId, HttpStatus.BAD_REQUEST);
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<Product>  updateProduct(@PathVariable (name = "id") long id,@RequestBody Product p ){
-		if(p.getName().isEmpty() || p.getInfo().isEmpty() || p.getuPrice() == 0 || p.getCategory().getId() == 0 || productRepository.findById(id).isEmpty()) {
-			return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
-		}else {
-			productRepository.deleteById(id);
-			return new ResponseEntity<Product>(productRepository.save(p), HttpStatus.CREATED);
-		}
-	}
 
-	@DeleteMapping("/{name}")
-	public ResponseEntity<Product> deleteProduct(@PathVariable (name = "name") String name){
-		Product p = productRepository.findByName(name);
-		if (p != null) {
-			productRepository.delete(p);
-			return new ResponseEntity<Product>(p, HttpStatus.OK);
-		}else {
-			return new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
-		}
-	}
 }

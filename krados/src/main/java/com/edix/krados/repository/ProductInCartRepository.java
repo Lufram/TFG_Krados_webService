@@ -1,5 +1,7 @@
 package com.edix.krados.repository;
 
+import com.edix.krados.model.Cart;
+import com.edix.krados.model.Product;
 import com.edix.krados.model.ProductInCart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,5 +14,5 @@ import java.util.List;
 @Repository
 public interface ProductInCartRepository extends JpaRepository<ProductInCart, Long> {
 
-    ProductInCart findByProductIdAndCartId(Long cartId, Long productId);
+    ProductInCart findByCartAndProduct(@Param("cartId") Cart cartId, @Param("productId") Product productId);
 }
