@@ -54,7 +54,7 @@ public class UserController {
     }
     // devuelve la información personal y el carrito que correspode con el id de usuario
     @GetMapping("/client")
-    public ResponseEntity<Client>getClient(@RequestParam (name = "userName") String userName){
+    public ResponseEntity<ClientForm>getClient(@RequestParam (name = "userName") String userName){
         User user = userRepository.findByUsername(userName);
         Client client = user.getClient();
         ClientForm clientForm = new ClientForm();
