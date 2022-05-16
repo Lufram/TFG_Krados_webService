@@ -1,6 +1,7 @@
 package com.edix.krados.controller;
 
 import com.edix.krados.form.ClientForm;
+import com.edix.krados.form.PasswordForm;
 import com.edix.krados.form.RegisterForm;
 import com.edix.krados.form.RoleToUserForm;
 import com.edix.krados.model.Address;
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,6 +34,10 @@ public class UserController {
     private ClientRepository clientRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // Devuelve todos los usuarios
     @GetMapping("/users")
@@ -47,22 +54,40 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<User>registerUser(@RequestBody RegisterForm registerForm){
        // URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("krados/user/save").toUriString());
-        userService.saveUser(new User(
+        Address address = new Address(
+                registerForm.getRoadName(),
+                registerForm.getCity(),
+                registerForm.getState(),
+                registerForm.getRoadNum(),
+                registerForm.getPostalCode());
+        Client client = new Client(
+                registerForm.getName(),
+                registerForm.getLastname(),
+                null);
+        User user = new User(
                 null,
                 registerForm.getName() + " " + registerForm.getLastname(),
                 registerForm.getUsername(),
                 registerForm.getPassword(),
-                new Client(registerForm.getName(),
-                        registerForm.getLastname(),
-                        new Address(registerForm.getRoadName(),
-                                    registerForm.getCity(),
-                                    registerForm.getState(),
-                                    registerForm.getRoadNum(),
-                                    registerForm.getPostalCode()),
-                        null),
-                new ArrayList<>()));
+                client,
+                new ArrayList<>());
+        client.setUser(user);
+        userService.saveUser(user);
         userService.addRoleToUser(registerForm.getUsername(), "ROLE_USER");
+
         return new ResponseEntity(userRepository.findByUsername(registerForm.getUsername()), HttpStatus.CREATED);
+    }
+    // Cambiar la contraseña de un usuario
+    @PutMapping("/updatePassword")
+    public ResponseEntity<String>updatePassword(@RequestBody PasswordForm passwordForm){
+        User user = userRepository.findByUsername(passwordForm.getUsername());
+        String oldPassword = passwordEncoder.encode(passwordForm.getOldPassword());
+        if(user.getPassword().equals(oldPassword)){
+            user.setPassword(passwordForm.getNewPassword());
+            userService.saveUser(user);
+            return new ResponseEntity("Cambio de contraseña correcto", HttpStatus.CREATED);
+        }
+        return new ResponseEntity("Error", HttpStatus.BAD_REQUEST);
     }
     // Añade un nuevo rol
     @PostMapping("/role/save")

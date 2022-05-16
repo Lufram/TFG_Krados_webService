@@ -40,4 +40,13 @@ public class Client {
         this.cart = new Cart(Client.this);
         this.user = user;
     }
+
+    public Client(String name, String surname, User user) {
+        this.name = name;
+        this.surname = surname;
+        this.address = address;
+        this.purchaseList = new ArrayList<>();
+        this.cart = new Cart(Client.this);
+    }
+
 }

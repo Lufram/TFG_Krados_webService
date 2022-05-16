@@ -52,29 +52,33 @@ public class CartController {
 
     // Añade un producto al carrito
     @PostMapping("/productInCart")
-    public ResponseEntity<Product> createProductToCart(
+    public ResponseEntity<ProductInCart> createProductToCart(
             @RequestParam(name = "cartId") Long cartId,
             @RequestParam(name = "productId") Long productId,
             @RequestParam(name = "amount") int amount) {
         Cart c = cartRepository.findById(cartId).get();
         Product p = productRepository.findById(productId).get();
-        if (c.getPInCart().contains(p)) {
-            List<ProductInCart> pCart = c.getPInCart();
-            for (ProductInCart pic : pCart) {
-                if (pic.getProduct().getId().equals(productId)) {
-                    pic.setAmount(pic.getAmount() + amount);
-                    pCartRepository.save(pic);
-                    return new ResponseEntity<>(p, HttpStatus.ACCEPTED);
+        if (c != null && p != null){
+            if (c.getPInCart().contains(p)){
+                List<ProductInCart> pCart = c.getPInCart();
+                for (ProductInCart pic : pCart) {
+                    if (pic.getProduct().getId().equals(productId)) {
+                        pic.setAmount(pic.getAmount() + amount);
+                        pCartRepository.save(pic);
+                        return new ResponseEntity<>(pic, HttpStatus.ACCEPTED);
+                    }
                 }
+            } else {
+                ProductInCart pCart = new ProductInCart();
+                pCart.setCart(c);
+                pCart.setProduct(p);
+                pCart.setAmount(amount);
+                pCartRepository.save(pCart);
+                return new ResponseEntity(pCart, HttpStatus.CREATED);
             }
         }
-        ProductInCart pCart = new ProductInCart();
-        pCart.setCart(c);
-        pCart.setProduct(p);
-        pCart.setAmount(amount);
-        pCartRepository.save(pCart);
 
-        return new ResponseEntity<>(p, HttpStatus.CREATED);
+        return new ResponseEntity<>( HttpStatus.NOT_FOUND);
     }
 
     // Actualiza la cantidad del producto en el carrito
