@@ -1,4 +1,4 @@
-package com.edix.krados.controller;
+package com.edix.krados.form;
 
 import lombok.Data;
 

@@ -1,8 +1,7 @@
 package com.edix.krados.controller;
 
-import com.edix.krados.model.Cart;
-import com.edix.krados.model.Product;
-import com.edix.krados.model.ProductInCart;
+import com.edix.krados.form.ProductInCartForm;
+import com.edix.krados.model.*;
 import com.edix.krados.repository.CartRepository;
 import com.edix.krados.repository.CategoryRepository;
 import com.edix.krados.repository.ProductInCartRepository;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/krados/cart")
@@ -109,6 +109,7 @@ public class CartController {
         return new ResponseEntity(productId, HttpStatus.BAD_REQUEST);
     }
 
+
     // Elimina un carrito
     @DeleteMapping("/deleteCart")
     public ResponseEntity<Cart> deleteAllCart(
@@ -137,7 +138,22 @@ public class CartController {
         }
 
     }
-
+    // Crea un nuevo pedido con los productos del carrito y vacia el carrito
+    @PostMapping
+    public ResponseEntity<Purchase>  trasnformCartInPurchase(
+            @RequestParam (name = "cartId") Long cartId){
+        Optional<Cart> cart = cartRepository.findById(cartId);
+        Purchase purchase = new Purchase();
+        purchase.setClient(cart.get().getClient());
+        for(ProductInCart p : cart.get().getPInCart()){
+            ProductInPurchase pip = new ProductInPurchase();
+            pip.setProduct(p.getProduct());
+            pip.setAmount(p.getAmount());
+            purchase.getPInPurchase().add(pip);
+        }
+        cartRepository.findById(cartId).get().getPInCart().clear();
+        return new ResponseEntity(purchase, HttpStatus.CREATED);
+    }
 
 
 }

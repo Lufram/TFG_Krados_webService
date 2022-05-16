@@ -1,5 +1,6 @@
 package com.edix.krados.controller;
 
+import com.edix.krados.form.RoleToUserForm;
 import com.edix.krados.model.Client;
 import com.edix.krados.model.Role;
 import com.edix.krados.model.User;
