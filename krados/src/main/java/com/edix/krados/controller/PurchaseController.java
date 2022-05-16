@@ -59,9 +59,10 @@ public class PurchaseController {
             pf.setName(p.getProduct().getName());
             pf.setUPrice(p.getProduct().getuPrice());
             pf.setAmount(p.getAmount());
+            purchaseProductList.add(pf);
         }
         if(purchase != null){
-            return new ResponseEntity( purchaseRepository.findById(purchaseId),HttpStatus.OK);
+            return new ResponseEntity( purchaseProductList,HttpStatus.OK);
         } else {
             return new ResponseEntity( purchaseId ,HttpStatus.NOT_FOUND);
         }
