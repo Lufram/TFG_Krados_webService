@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/krados/purchase")
@@ -31,10 +30,15 @@ public class PurchaseController {
         Client c = clientRepository.findById(clientId).get();
         List<PurchaseForm> purchaseList= new ArrayList<>();
         for(Purchase p: clientRepository.findById(clientId).get().getPurchaseList()){
+            double totalPurchasePrice = 0;
+            for(ProductInPurchase pip : p.getPInPurchase()){
+                totalPurchasePrice = totalPurchasePrice + pip.getProduct().getuPrice() * pip.getAmount();
+            }
             PurchaseForm pForm = new PurchaseForm();
             pForm.setId(p.getId());
             pForm.setPurchaseDate(p.getPurchaseDate());
             pForm.setStatus(p.getStatus());
+            pForm.setTotalPrice(totalPurchasePrice);
             purchaseList.add(pForm);
         }
         if(c != null){
@@ -44,14 +48,14 @@ public class PurchaseController {
         }
     }
     // Devuelve un pedido por id
-//    @GetMapping("purchaseById/{purchaseId}")
-//    public ResponseEntity<Purchase> getPurchaseById(
-//            @PathVariable("purchaseId") Long purchaseId) {
-//        ProductInPurchase purchase = productInPurchaseRepository.findById(purchaseId).get();
-//        if(purchase != null){
-//            return new ResponseEntity( purchaseRepository.findById(purchaseId),HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity( purchaseId ,HttpStatus.NOT_FOUND);
-//        }
-//    }
+    @GetMapping("purchaseById/{purchaseId}")
+    public ResponseEntity<Purchase> getPurchaseById(
+            @PathVariable("purchaseId") Long purchaseId) {
+        ProductInPurchase purchase = productInPurchaseRepository.findById(purchaseId).get();
+        if(purchase != null){
+            return new ResponseEntity( purchaseRepository.findById(purchaseId),HttpStatus.OK);
+        } else {
+            return new ResponseEntity( purchaseId ,HttpStatus.NOT_FOUND);
+        }
+    }
 }

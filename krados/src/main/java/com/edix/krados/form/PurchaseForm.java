@@ -9,4 +9,5 @@ public class PurchaseForm {
     private Long id;
     private Date purchaseDate;
     private String status;
+    private double totalPrice;
 }
