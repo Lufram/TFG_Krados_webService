@@ -43,11 +43,11 @@ public class PurchaseController {
             return new ResponseEntity( clientId ,HttpStatus.NOT_FOUND);
         }
     }
-//    // Devuelve un pedido por id
-//    @GetMapping("/{purchaseId}")
+    // Devuelve un pedido por id
+//    @GetMapping("purchaseById/{purchaseId}")
 //    public ResponseEntity<Purchase> getPurchaseById(
 //            @PathVariable("purchaseId") Long purchaseId) {
-//        Optional<ProductInPurchase> purchase = productInPurchaseRepository.findById(purchaseId);
+//        ProductInPurchase purchase = productInPurchaseRepository.findById(purchaseId).get();
 //        if(purchase != null){
 //            return new ResponseEntity( purchaseRepository.findById(purchaseId),HttpStatus.OK);
 //        } else {
