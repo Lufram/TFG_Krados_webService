@@ -1,5 +1,6 @@
 package com.edix.krados.controller;
 
+import com.edix.krados.form.ClientForm;
 import com.edix.krados.form.RoleToUserForm;
 import com.edix.krados.model.Client;
 import com.edix.krados.model.Role;
@@ -55,6 +56,15 @@ public class UserController {
     @GetMapping("/client")
     public ResponseEntity<Client>getClient(@RequestParam (name = "userName") String userName){
         User user = userRepository.findByUsername(userName);
-        return new ResponseEntity(user.getClient(), HttpStatus.OK);
+        Client client = user.getClient();
+        ClientForm clientForm = new ClientForm();
+
+        clientForm.setId(client.getId());
+        clientForm.setName(client.getName());
+        clientForm.setSurname(client.getSurname());
+        clientForm.setAddress(client.getAddress());
+        clientForm.setCartId(client.getCart().getId());
+
+        return new ResponseEntity(clientForm, HttpStatus.OK);
     }
 }
