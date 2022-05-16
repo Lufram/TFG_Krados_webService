@@ -19,7 +19,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -62,6 +61,7 @@ public class UserController {
                                     registerForm.getPostalCode()),
                         null),
                 new ArrayList<>()));
+        userService.addRoleToUser(registerForm.getUsername(), "ROLE_USER");
         return new ResponseEntity(userRepository.findByUsername(registerForm.getUsername()), HttpStatus.CREATED);
     }
     // Añade un nuevo rol
