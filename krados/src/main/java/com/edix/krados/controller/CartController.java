@@ -2,18 +2,21 @@ package com.edix.krados.controller;
 
 import com.edix.krados.form.ProductInCartForm;
 import com.edix.krados.model.*;
-import com.edix.krados.repository.CartRepository;
-import com.edix.krados.repository.CategoryRepository;
-import com.edix.krados.repository.ProductInCartRepository;
-import com.edix.krados.repository.ProductRepository;
+import com.edix.krados.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/krados/cart")
@@ -26,6 +29,10 @@ public class CartController {
     private ProductInCartRepository pCartRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private PurchaseRepository purchaseRepository;
+    @Autowired
+    private ProductInPurchaseRepository productInPurchaseRepository;
 
     // Devuelve todos los productos del carrito
     @GetMapping("/productInCart/{cartId}")
@@ -146,17 +153,27 @@ public class CartController {
     @PostMapping
     public ResponseEntity<Purchase>  trasnformCartInPurchase(
             @RequestParam (name = "cartId") Long cartId){
-        Optional<Cart> cart = cartRepository.findById(cartId);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+        LocalDate currentLocalDate = LocalDate.now();
+        ZoneId systemTimeZone = ZoneId.systemDefault();
+        ZonedDateTime zonedDateTime = currentLocalDate.atStartOfDay(systemTimeZone);
+        Date utilDate = Date.from(zonedDateTime.toInstant());
+
+        Cart cart = cartRepository.findById(cartId).get();
         Purchase purchase = new Purchase();
-        purchase.setClient(cart.get().getClient());
-        for(ProductInCart p : cart.get().getPInCart()){
+        purchase.setClient(cart.getClient());
+        purchase.setStatus("Preparando");
+        purchase.setPurchaseDate(utilDate);
+        purchaseRepository.save(purchase);
+
+        for(ProductInCart p : cart.getPInCart()){
             ProductInPurchase pip = new ProductInPurchase();
             pip.setProduct(p.getProduct());
             pip.setAmount(p.getAmount());
-            purchase.getPInPurchase().add(pip);
+            pip.setPurchase(purchase);
+            productInPurchaseRepository.save(pip);
         }
-        cartRepository.findById(cartId).get().getPInCart().clear();
-        return new ResponseEntity(purchase, HttpStatus.CREATED);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
 
