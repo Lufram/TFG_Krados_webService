@@ -12,7 +12,6 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 @Getter @Setter
 public class Address {
-    private String roadType;
     private String roadName;
     private String cityName;
     private String extraInfo;

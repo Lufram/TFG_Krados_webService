@@ -23,10 +23,6 @@ public class Client {
     private String name;
     @Column(name = "surname", nullable = false)
     private String surname;
-    @Column(name = "telNumber", nullable = false)
-    private String telNumber;
-    @Temporal(TemporalType.DATE)
-    private Date burnDate;
     @Embedded
     private Address address;
     @OneToMany(mappedBy = "client")
@@ -36,12 +32,9 @@ public class Client {
     @OneToOne
     private User user;
 
-    public Client(String name, String surname, String telNumber, Date burnDate, Address address, User user) {
-
+    public Client(String name, String surname, Address address, User user) {
         this.name = name;
         this.surname = surname;
-        this.telNumber = telNumber;
-        this.burnDate = burnDate;
         this.address = address;
         this.purchaseList = new ArrayList<>();
         this.cart = new Cart(Client.this);

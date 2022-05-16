@@ -1,7 +1,9 @@
 package com.edix.krados.controller;
 
 import com.edix.krados.form.ClientForm;
+import com.edix.krados.form.RegisterForm;
 import com.edix.krados.form.RoleToUserForm;
+import com.edix.krados.model.Address;
 import com.edix.krados.model.Client;
 import com.edix.krados.model.Role;
 import com.edix.krados.model.User;
@@ -16,10 +18,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/krados")
 @RequiredArgsConstructor
 public class UserController {
     @Autowired
@@ -37,8 +41,28 @@ public class UserController {
     // Añade un nuevo usuario
     @PostMapping("/users/save")
     public ResponseEntity<User>saveUser(@RequestBody User user){
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/user/save").toUriString());
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("krados/user/save").toUriString());
         return ResponseEntity.created(uri).body(userService.saveUser(user));
+    }
+    // Recoge los datos del formulario de registro y crea un nuevo usuario
+    @PostMapping("/register")
+    public ResponseEntity<User>registerUser(@RequestBody RegisterForm registerForm){
+       // URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("krados/user/save").toUriString());
+        userService.saveUser(new User(
+                null,
+                registerForm.getName() + " " + registerForm.getLastname(),
+                registerForm.getUsername(),
+                registerForm.getPassword(),
+                new Client(registerForm.getName(),
+                        registerForm.getLastname(),
+                        new Address(registerForm.getRoadName(),
+                                    registerForm.getCity(),
+                                    registerForm.getState(),
+                                    registerForm.getRoadNum(),
+                                    registerForm.getPostalCode()),
+                        null),
+                new ArrayList<>()));
+        return new ResponseEntity(userRepository.findByUsername(registerForm.getUsername()), HttpStatus.CREATED);
     }
     // Añade un nuevo rol
     @PostMapping("/role/save")
