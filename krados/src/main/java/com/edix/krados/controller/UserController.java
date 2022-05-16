@@ -12,6 +12,8 @@ import com.edix.krados.repository.ClientRepository;
 import com.edix.krados.repository.UserRepository;
 import com.edix.krados.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +55,19 @@ public class UserController {
     // Recoge los datos del formulario de registro y crea un nuevo usuario
     @PostMapping("/register")
     public ResponseEntity<User>registerUser(@RequestBody RegisterForm registerForm){
-       // URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("krados/user/save").toUriString());
+        userService.saveUser(new User(null,
+                registerForm.getName() + " " + registerForm.getLastname(),
+                registerForm.getUsername(),
+                registerForm.getPassword(),
+                null,
+                new ArrayList<>()));
+//        User user = new User(
+//                null,
+//                registerForm.getName() + " " + registerForm.getLastname(),
+//                registerForm.getUsername(),
+//                registerForm.getPassword(),
+//                null,
+//                new ArrayList<>());
         Address address = new Address(
                 registerForm.getRoadName(),
                 registerForm.getCity(),
@@ -63,19 +77,14 @@ public class UserController {
         Client client = new Client(
                 registerForm.getName(),
                 registerForm.getLastname(),
-                null);
-        User user = new User(
                 null,
-                registerForm.getName() + " " + registerForm.getLastname(),
-                registerForm.getUsername(),
-                registerForm.getPassword(),
-                client,
-                new ArrayList<>());
-        client.setUser(user);
-        userService.saveUser(user);
-        userService.addRoleToUser(registerForm.getUsername(), "ROLE_USER");
+                null);
 
-        return new ResponseEntity(userRepository.findByUsername(registerForm.getUsername()), HttpStatus.CREATED);
+        clientRepository.save(client);
+//        userRepository.findByUsername(registerForm.getUsername()).setClient(client);
+//        userService.addRoleToUser(registerForm.getUsername(), "ROLE_USER");
+
+        return new ResponseEntity(HttpStatus.CREATED);
     }
     // Cambiar la contraseña de un usuario
     @PutMapping("/updatePassword")

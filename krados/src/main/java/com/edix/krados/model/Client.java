@@ -29,7 +29,7 @@ public class Client {
     private List<Purchase> purchaseList;
     @OneToOne(mappedBy = "client")
     private Cart cart;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private User user;
 
     public Client(String name, String surname, Address address, User user) {
@@ -37,7 +37,6 @@ public class Client {
         this.surname = surname;
         this.address = address;
         this.purchaseList = new ArrayList<>();
-        this.cart = new Cart(Client.this);
         this.user = user;
     }
 
