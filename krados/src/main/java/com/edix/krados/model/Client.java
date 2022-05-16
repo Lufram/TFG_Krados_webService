@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,4 +35,16 @@ public class Client {
     private Cart cart;
     @OneToOne
     private User user;
+
+    public Client(String name, String surname, String telNumber, Date burnDate, Address address, User user) {
+
+        this.name = name;
+        this.surname = surname;
+        this.telNumber = telNumber;
+        this.burnDate = burnDate;
+        this.address = address;
+        this.purchaseList = new ArrayList<>();
+        this.cart = new Cart(Client.this);
+        this.user = user;
+    }
 }

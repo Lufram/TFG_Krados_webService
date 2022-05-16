@@ -85,6 +85,16 @@ public class ProdController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
+	// Devuelve todos los productos que pertenezcan a una categoria pasandole un id de categoría
+	@GetMapping(path="offer")
+	public ResponseEntity<List<Product>> getProductByOffer(){
+		List<Product> p = productRepository.findByInOfferTrue();
+		if(!p.isEmpty()) {
+			return ResponseEntity.ok(p);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
 	// Devuelve todos los productos de una categoría filtrando por nombre
 	@GetMapping(path="findByCategoryAndName")
 	public ResponseEntity<List<Product>> getProductByCategoryId(
