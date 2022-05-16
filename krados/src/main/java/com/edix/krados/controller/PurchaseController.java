@@ -1,5 +1,6 @@
 package com.edix.krados.controller;
 
+import com.edix.krados.form.ProductInPurchaseForm;
 import com.edix.krados.form.PurchaseForm;
 import com.edix.krados.model.*;
 import com.edix.krados.repository.*;
@@ -49,9 +50,16 @@ public class PurchaseController {
     }
     // Devuelve un pedido por id
     @GetMapping("purchaseById/{purchaseId}")
-    public ResponseEntity<Purchase> getPurchaseById(
+    public ResponseEntity<List<ProductInPurchaseForm>> getPurchaseById(
             @PathVariable("purchaseId") Long purchaseId) {
-        ProductInPurchase purchase = productInPurchaseRepository.findById(purchaseId).get();
+        Purchase purchase = purchaseRepository.findById(purchaseId).get();
+        ArrayList<ProductInPurchaseForm> purchaseProductList = new ArrayList<>();
+        for(ProductInPurchase p : purchase.getPInPurchase()){
+            ProductInPurchaseForm pf = new ProductInPurchaseForm();
+            pf.setName(p.getProduct().getName());
+            pf.setUPrice(p.getProduct().getuPrice());
+            pf.setAmount(p.getAmount());
+        }
         if(purchase != null){
             return new ResponseEntity( purchaseRepository.findById(purchaseId),HttpStatus.OK);
         } else {
