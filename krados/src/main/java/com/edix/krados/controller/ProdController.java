@@ -39,7 +39,7 @@ public class ProdController {
 	@PostMapping
 	public ResponseEntity<Product>  createProduct(@RequestBody Product p ){
 		if(p.getName().isEmpty() || p.getInfo().isEmpty() ||
-				p.getuPrice() == 0 || p.getCategory().getId() == 0 || productRepository.findByName(p.getName()) !=null) {
+				p.getUPrice() == 0 || p.getCategory().getId() == 0 || productRepository.findByName(p.getName()) !=null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(productRepository.save(p), HttpStatus.CREATED);
@@ -58,7 +58,7 @@ public class ProdController {
 	// Actualiza la informacion de un producto
 	@PutMapping("/{id}")
 	public ResponseEntity<Product>  updateProduct(@PathVariable (name = "id") long id,@RequestBody Product p ){
-		if(p.getName().isEmpty() || p.getInfo().isEmpty() || p.getuPrice() == 0 || p.getCategory().getId() == 0 || productRepository.findById(id).isEmpty()) {
+		if(p.getName().isEmpty() || p.getInfo().isEmpty() || p.getUPrice() == 0 || p.getCategory().getId() == 0 || productRepository.findById(id).isEmpty()) {
 			return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
 		}else {
 			productRepository.deleteById(id);

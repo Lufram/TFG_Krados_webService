@@ -33,7 +33,7 @@ public class PurchaseController {
         for(Purchase p: clientRepository.findById(clientId).get().getPurchaseList()){
             double totalPurchasePrice = 0;
             for(ProductInPurchase pip : p.getPInPurchase()){
-                totalPurchasePrice = totalPurchasePrice + pip.getProduct().getuPrice() * pip.getAmount();
+                totalPurchasePrice = totalPurchasePrice + pip.getProduct().getUPrice() * pip.getAmount();
             }
             PurchaseForm pForm = new PurchaseForm();
             pForm.setId(p.getId());
@@ -57,12 +57,30 @@ public class PurchaseController {
         for(ProductInPurchase p : purchase.getPInPurchase()){
             ProductInPurchaseForm pf = new ProductInPurchaseForm();
             pf.setName(p.getProduct().getName());
-            pf.setUPrice(p.getProduct().getuPrice());
+            pf.setUPrice(p.getProduct().getUPrice());
             pf.setAmount(p.getAmount());
             purchaseProductList.add(pf);
         }
         if(purchase != null){
             return new ResponseEntity( purchaseProductList,HttpStatus.OK);
+        } else {
+            return new ResponseEntity( purchaseId ,HttpStatus.NOT_FOUND);
+        }
+    }
+    // Duplica un pedido
+    @PostMapping("buyAgainPurchaseById/{purchaseId}")
+    public ResponseEntity<List<ProductInPurchaseForm>> buyAgainPurchaseById(
+            @PathVariable("purchaseId") Long purchaseId) {
+        Purchase purchase = purchaseRepository.findById(purchaseId).get();
+        Purchase newPurchase = new Purchase();
+        newPurchase.setClient(purchase.getClient());
+        newPurchase.setPInPurchase(new ArrayList<>());
+        purchaseRepository.save(newPurchase);
+        for(ProductInPurchase p : purchase.getPInPurchase()){
+            newPurchase.getPInPurchase().add(p);
+        }
+        if(purchase != null){
+            return new ResponseEntity( newPurchase,HttpStatus.OK);
         } else {
             return new ResponseEntity( purchaseId ,HttpStatus.NOT_FOUND);
         }
