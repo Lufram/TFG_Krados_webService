@@ -85,6 +85,7 @@ public class ProdController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
+
 	// Devuelve todos los productos de oferta
 	@GetMapping(path="offer")
 	public ResponseEntity<List<Product>> getProductByOffer(){
