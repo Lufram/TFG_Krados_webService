@@ -13,6 +13,10 @@ import org.springframework.stereotype.Repository;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	public List<Product> findAll();
+
 	public List<Product> findByNameContaining(@Param("name") String name);
+
 	public Product findByName(String name);
+
+	public List<Product> findByInOfferTrue();
 }
