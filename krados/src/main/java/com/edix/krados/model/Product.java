@@ -20,6 +20,7 @@ public class Product {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
     private String info;
+    private boolean inOffer = false;
     @Column(name = "unity_price", nullable = false)
     private double uPrice;
 	@JsonIgnore

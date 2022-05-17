@@ -22,6 +22,8 @@ public class User {
     private String username;
     private String password;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Client client;
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList();
 }

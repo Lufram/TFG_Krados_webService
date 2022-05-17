@@ -17,7 +17,7 @@ public class ProductInPurchase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private double amount;
+    private int amount;
     private double discount;
     @ManyToOne
     @JoinColumn(name = "purchase_id")
