@@ -4,10 +4,8 @@ import com.edix.krados.form.ClientForm;
 import com.edix.krados.form.PasswordForm;
 import com.edix.krados.form.RegisterForm;
 import com.edix.krados.form.RoleToUserForm;
-import com.edix.krados.model.Address;
-import com.edix.krados.model.Client;
-import com.edix.krados.model.Role;
-import com.edix.krados.model.User;
+import com.edix.krados.model.*;
+import com.edix.krados.repository.CartRepository;
 import com.edix.krados.repository.ClientRepository;
 import com.edix.krados.repository.UserRepository;
 import com.edix.krados.service.UserService;
@@ -37,6 +35,8 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private CartRepository cartRepository;
+    @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -55,36 +55,40 @@ public class UserController {
     // Recoge los datos del formulario de registro y crea un nuevo usuario
     @PostMapping("/register")
     public ResponseEntity<User>registerUser(@RequestBody RegisterForm registerForm){
-        userService.saveUser(new User(null,
-                registerForm.getName() + " " + registerForm.getLastname(),
-                registerForm.getUsername(),
-                registerForm.getPassword(),
-                null,
-                new ArrayList<>()));
-//        User user = new User(
-//                null,
-//                registerForm.getName() + " " + registerForm.getLastname(),
-//                registerForm.getUsername(),
-//                registerForm.getPassword(),
-//                null,
-//                new ArrayList<>());
-        Address address = new Address(
-                registerForm.getRoadName(),
-                registerForm.getCity(),
-                registerForm.getState(),
-                registerForm.getRoadNum(),
-                registerForm.getPostalCode());
-        Client client = new Client(
-                registerForm.getName(),
-                registerForm.getLastname(),
-                null,
-                null);
-
-        clientRepository.save(client);
-//        userRepository.findByUsername(registerForm.getUsername()).setClient(client);
-//        userService.addRoleToUser(registerForm.getUsername(), "ROLE_USER");
-
-        return new ResponseEntity(HttpStatus.CREATED);
+        try {
+            User userExist = userRepository.findByUsername(registerForm.getUsername());
+            if(userExist == null){
+                User user = new User();
+                user.setName(registerForm.getName() + " " + registerForm.getLastname());
+                user.setUsername(registerForm.getUsername());
+                user.setPassword(registerForm.getPassword());
+                user.setRoles(new ArrayList<>());
+                userService.saveUser(user);
+                userService.addRoleToUser(registerForm.getUsername(), "ROLE_USER");
+                Cart cart = new Cart();
+                cartRepository.save(cart);
+                Address address = new Address(
+                        registerForm.getRoadName(),
+                        registerForm.getCity(),
+                        registerForm.getState(),
+                        registerForm.getRoadNum(),
+                        registerForm.getPostalCode());
+                Client client = new Client();
+                client.setName(registerForm.getName());
+                client.setSurname(registerForm.getLastname());
+                client.setAddress(address);
+                client.setUser(user);
+                client.setCart(cart);
+                clientRepository.save(client);
+                cart.setClient(client);
+                cartRepository.save(cart);
+                return new ResponseEntity(HttpStatus.CREATED);
+            }else{
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+        }catch (Exception e){
+            return new ResponseEntity(HttpStatus.NOT_IMPLEMENTED);
+        }
     }
     // Cambiar la contraseña de un usuario
     @PutMapping("/updatePassword")
