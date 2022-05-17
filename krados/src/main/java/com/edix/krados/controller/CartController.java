@@ -46,7 +46,7 @@ public class CartController {
                 pf.setId(p.getProduct().getId());
                 pf.setName(productRepository.findById(p.getProduct().getId()).get().getName());
                 pf.setInfo(productRepository.findById(p.getProduct().getId()).get().getInfo());
-                pf.setUPrice(productRepository.findById(p.getProduct().getId()).get().getuPrice());
+                pf.setUPrice(productRepository.findById(p.getProduct().getId()).get().getUPrice());
                 pf.setAmount(p.getAmount());
 
                 prodlist.add(pf);
