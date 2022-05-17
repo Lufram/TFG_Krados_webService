@@ -64,7 +64,7 @@ public class UserController {
                 user.setPassword(registerForm.getPassword());
                 user.setRoles(new ArrayList<>());
                 userService.saveUser(user);
-                userService.addRoleToUser(registerForm.getUsername(), "ROLE_USER");
+//                userService.addRoleToUser(registerForm.getUsername(), "ROLE_USER");
                 Cart cart = new Cart();
                 cartRepository.save(cart);
                 Address address = new Address(
@@ -82,7 +82,7 @@ public class UserController {
                 clientRepository.save(client);
                 cart.setClient(client);
                 cartRepository.save(cart);
-                return new ResponseEntity(HttpStatus.CREATED);
+                return new ResponseEntity<User>(user,HttpStatus.CREATED);
             }else{
                 return new ResponseEntity(HttpStatus.BAD_REQUEST);
             }
