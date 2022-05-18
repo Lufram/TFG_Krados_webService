@@ -1,6 +1,7 @@
 package com.edix.krados.controller;
 
 import com.edix.krados.form.ProductInCartForm;
+import com.edix.krados.form.ResponseForm;
 import com.edix.krados.model.*;
 import com.edix.krados.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,27 +66,32 @@ public class CartController {
             @RequestParam(name = "amount") int amount) {
         Cart c = cartRepository.findById(cartId).get();
         Product p = productRepository.findById(productId).get();
-        if (c != null && p != null){
-            if (c.getPInCart().contains(p)){
-                List<ProductInCart> pCart = c.getPInCart();
-                for (ProductInCart pic : pCart) {
-                    if (pic.getProduct().getId().equals(productId)) {
-                        pic.setAmount(pic.getAmount() + amount);
-                        pCartRepository.save(pic);
-                        return new ResponseEntity<>(pic, HttpStatus.ACCEPTED);
+        if (c != null && p != null) {
+            for (ProductInCart pInCart : c.getPInCart()) {
+                if (pInCart.getProduct().getId()== productId) {
+                    for (ProductInCart pic : c.getPInCart()) {
+                        if (pic.getProduct().getId().equals(productId)) {
+                            ProductInCart newPic = new ProductInCart();
+                            newPic.setId(pic.getId());
+                            newPic.setProduct(pic.getProduct());
+                            newPic.setAmount(pic.getAmount()+ amount);
+                            newPic.setCart(pic.getCart());
+                            pCartRepository.delete(pic);
+                            pCartRepository.save(newPic);
+                            return new ResponseEntity<>(pic, HttpStatus.ACCEPTED);
+                        }
                     }
                 }
-            } else {
-                ProductInCart pCart = new ProductInCart();
-                pCart.setCart(c);
-                pCart.setProduct(p);
-                pCart.setAmount(amount);
-                pCartRepository.save(pCart);
-                return new ResponseEntity(pCart, HttpStatus.CREATED);
             }
+            ProductInCart pCart = new ProductInCart();
+            pCart.setCart(c);
+            pCart.setProduct(p);
+            pCart.setAmount(amount);
+            pCartRepository.save(pCart);
+            return new ResponseEntity(pCart, HttpStatus.CREATED);
         }
 
-        return new ResponseEntity<>( HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     // Actualiza la cantidad del producto en el carrito
@@ -134,6 +140,7 @@ public class CartController {
         }
 
     }
+
     // Elimina los productos de un carrito
     @DeleteMapping("/deleteProductsInCart")
     public ResponseEntity<List<ProductInCart>> deleteAllProductInCart(
@@ -141,18 +148,19 @@ public class CartController {
         if (cartRepository.existsById(cartId)) {
             List<ProductInCart> pCart = cartRepository.findById(cartId).get().getPInCart();
             for (ProductInCart p : pCart) {
-                    pCartRepository.delete(p);
-                }
+                pCartRepository.delete(p);
+            }
             return new ResponseEntity<>(pCart, HttpStatus.ACCEPTED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
     }
+
     // Crea un nuevo pedido con los productos del carrito y vacia el carrito
     @PostMapping
-    public ResponseEntity<Purchase>  trasnformCartInPurchase(
-            @RequestParam (name = "cartId") Long cartId){
+    public ResponseEntity<ResponseForm> trasnformCartInPurchase(
+            @RequestParam(name = "cartId") Long cartId) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
         LocalDate currentLocalDate = LocalDate.now();
         ZoneId systemTimeZone = ZoneId.systemDefault();
@@ -166,14 +174,15 @@ public class CartController {
         purchase.setPurchaseDate(utilDate);
         purchaseRepository.save(purchase);
 
-        for(ProductInCart p : cart.getPInCart()){
+        for (ProductInCart p : cart.getPInCart()) {
             ProductInPurchase pip = new ProductInPurchase();
             pip.setProduct(p.getProduct());
             pip.setAmount(p.getAmount());
             pip.setPurchase(purchase);
             productInPurchaseRepository.save(pip);
         }
-        return new ResponseEntity(HttpStatus.CREATED);
+
+        return new ResponseEntity<ResponseForm>(new ResponseForm("ok"), HttpStatus.CREATED);
     }
 
 
