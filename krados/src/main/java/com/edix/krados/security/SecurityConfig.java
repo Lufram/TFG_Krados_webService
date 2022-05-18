@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // PUBLIC
-        http.authorizeRequests().antMatchers(POST, "/krados/login/**" , "/krados/token/refresh/**").permitAll();
+        http.authorizeRequests().antMatchers(POST, "/krados/login/**" , "/krados/token/refresh/**","/krados/register/**").permitAll();
         // PRODUCTS
         http.authorizeRequests().antMatchers(GET, "/krados/product/**" ).hasAnyAuthority("ROLE_USER");
         http.authorizeRequests().antMatchers(POST, "/krados/product/add/**" ).hasAnyAuthority("ROLE_ADMIN");
