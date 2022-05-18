@@ -202,4 +202,21 @@ public class UserController {
 
         return new ResponseEntity(clientForm, HttpStatus.OK);
     }
+    
+    // Modifica los datos del cliente
+    @PutMapping("/client/update")
+    public ResponseEntity<Client> updateClient(@RequestBody ClientForm clientForm) {
+        Client c = clientRepository.findById(clientForm.getId()).get();
+        c.setName(clientForm.getName());
+        c.setSurname(clientForm.getSurname());
+        Address a = c.getAddress();
+        a.setRoadName(clientForm.getAddress().getRoadName());
+        a.setNumber(clientForm.getAddress().getNumber());
+        a.setCityName(clientForm.getAddress().getCityName());
+        a.setExtraInfo(clientForm.getAddress().getExtraInfo());
+        a.setPostalCode(clientForm.getAddress().getPostalCode());
+        clientRepository.save(c);
+
+        return new ResponseEntity(c , HttpStatus.OK);
+    }
 }
