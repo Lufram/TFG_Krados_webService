@@ -42,13 +42,13 @@ class KradosApplicationTests {
 	}
 
 	@Test
-	@Sql({"/product.sql"})
-	void addProducts(){
+	@Sql({"/roles.sql"})
+	void addRoles(){
 	}
 
 	@Test
-	@Sql({"/roles.sql"})
-	void addRoles(){
+	@Sql({"/product.sql"})
+	void addProducts(){
 	}
 
 }
