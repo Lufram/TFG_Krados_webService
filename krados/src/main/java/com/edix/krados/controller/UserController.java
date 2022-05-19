@@ -100,7 +100,6 @@ public class UserController {
                         registerForm.getRoadName(),
                         registerForm.getCity(),
                         registerForm.getState(),
-                        registerForm.getRoadNum(),
                         registerForm.getPostalCode());
                 Client client = new Client();
                 client.setName(registerForm.getName());
@@ -205,18 +204,29 @@ public class UserController {
     
     // Modifica los datos del cliente
     @PutMapping("/client/update")
-    public ResponseEntity<Client> updateClient(@RequestBody ClientForm clientForm) {
-        Client c = clientRepository.findById(clientForm.getId()).get();
-        c.setName(clientForm.getName());
-        c.setSurname(clientForm.getSurname());
-        Address a = c.getAddress();
-        a.setRoadName(clientForm.getAddress().getRoadName());
-        a.setNumber(clientForm.getAddress().getNumber());
-        a.setCityName(clientForm.getAddress().getCityName());
-        a.setExtraInfo(clientForm.getAddress().getExtraInfo());
-        a.setPostalCode(clientForm.getAddress().getPostalCode());
-        clientRepository.save(c);
+    public ResponseEntity<ResponseForm> updateClient(@RequestBody ClientForm clientForm) {
+        try{
+            Client c = clientRepository.findById(clientForm.getId()).get();
+//        Client newClient = new Client();
+//        newClient.setId(clientForm.getId());
+            c.setName(clientForm.getName());
+            c.setSurname(clientForm.getSurname());
+            c.setCart(c.getCart());
+            c.setPurchaseList(c.getPurchaseList());
+            c.setUser(c.getUser());
+            Address a = new Address();
+            a.setRoadName(clientForm.getRoadName());
+            a.setPostalCode(clientForm.getPostalCode());
+            a.setCityName(clientForm.getCityName());
+            a.setExtraInfo(clientForm.getExtraInfo());
+            c.setAddress(a);
+            clientRepository.save(c);
+//        clientRepository.save(newClient);
 
-        return new ResponseEntity(c , HttpStatus.OK);
+            return new ResponseEntity<ResponseForm>(new ResponseForm("ok"), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
     }
 }

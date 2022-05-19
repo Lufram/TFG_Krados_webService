@@ -2,6 +2,7 @@ package com.edix.krados.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import com.edix.krados.repository.CartRepository;
@@ -105,7 +106,7 @@ public class ProdController {
 		List<Product> plCategoryAndName = new ArrayList<>();
 		if(!plCategory.isEmpty()) {
 			for (Product pro: plCategory){
-				if (pro.getName().contains(pName)){
+				if (pro.getName().toLowerCase().contains(pName.toLowerCase())){
 					plCategoryAndName.add(pro);
 				}
 			}
