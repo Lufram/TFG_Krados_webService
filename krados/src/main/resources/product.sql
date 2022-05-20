@@ -49,13 +49,13 @@ INSERT INTO product (id, name, info, unity_price, category_id, in_offer, url) VA
 'Logitech G502 Lightspeed',
 'El ratón G502 es todo un icono que ha ocupado las primeras posiciones de las listas generación tras generación. Y es el ratón que eligen quienes juegan en serio. Ahora, el ratón G502 se une a las filas de los ratones inalámbricos para gaming más avanzados del mundo con el lanzamiento de G502 LIGHTSPEED.',
 '97.42',
-3,
+2,
 b'0',
 'https://res.cloudinary.com/dpdob4mxw/image/upload/v1652826660/krados/5_jed3l3.webp');
 
 INSERT INTO product (id, name, info, unity_price, category_id, in_offer, url) VALUES
 (NULL,
-'Razer BlackShark V2 Auriculares Gaming Multiplataforma',
+'Razer BlackShark V2',
 'Si los Esports lo son todo para ti, entrégalo todo con los Razer BlackShark V2. Con unos auriculares para Esports que son una triple amenaza por su audio increíble, nitidez de micrófono superior y aislamiento acústico extremo, es hora de que te conviertas en un auténtico profesional.',
 '81.72',
 3,
@@ -64,7 +64,7 @@ b'1',
 
 INSERT INTO product (id, name, info, unity_price, category_id, in_offer, url) VALUES
 (NULL,
-'Forgeon Sergeant Auriculares Gaming 7.1',
+'Forgeon Sergeant Gaming 7.1',
 'Aparece el modelo superior de auriculares Forgeon. Los Sergeant Wired Headset 7.1. Unos auriculares que ofrecen una experiencia de sonido única y totalmente envolvente. También cuenta con múltiples accesorios para que puedas transportarlo cómodamente e infinidad de posibilidades con el objetivo de que tengas la mejor experiencia de juego posible.',
 '69.99',
 3,
@@ -73,7 +73,7 @@ b'0',
 
 INSERT INTO product (id, name, info, unity_price, category_id, in_offer, url) VALUES
 (NULL,
-'Logitech G332 Auriculares Gaming',
+'Logitech G332 Gaming',
 'Los auriculares con micrófono Logitech G332 para gaming tienen transductores de 50 mm para una reproducción de sonido completa. El micrófono de 6 mm volteable para silenciar está optimizado para comunicaciones de voz. Compatible con varias plataformas.',
 '35.99',
 3,
@@ -82,7 +82,7 @@ b'0',
 
 INSERT INTO product (id, name, info, unity_price, category_id, in_offer, url) VALUES
 (NULL,
-'Tempest GHS210 Duke Auriculares Gaming RGB PC',
+'Tempest GHS210 Duke Gaming RGB',
 'Desde las últimas tendencias del mercado, Tempest nos sorprende con su nuevo modelo Headset GHS 210 Duke. Unos auriculares con una iluminación RGB exclusiva que te proporciona una mezcla de colores para que disfrutes al completo de tu setup gaming.',
 '30.99',
 3,
@@ -91,7 +91,7 @@ b'0',
 
 INSERT INTO product (id, name, info, unity_price, category_id, in_offer, url) VALUES
 (NULL,
-'HP Pavilion 400 Auriculares Gaming Negros',
+'HP Pavilion 400 Gaming',
 'Mejora tu juego y entretenimiento a nuevas cotas con sonido estéreo de gran calidad y un diseño característico y elegante. Diseñado para amplificar tus juegos, música y películas, prepárate para una experiencia de audio inmersiva.',
 '32.95',
 3,

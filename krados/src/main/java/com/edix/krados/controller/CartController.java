@@ -163,7 +163,7 @@ public class CartController {
             @RequestParam(name = "cartId") Long cartId) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
         LocalDate currentLocalDate = LocalDate.now();
-        ZoneId systemTimeZone = ZoneId.systemDefault();
+        ZoneId systemTimeZone = ZoneId.of("Etc/GMT+2");
         ZonedDateTime zonedDateTime = currentLocalDate.atStartOfDay(systemTimeZone);
         Date utilDate = Date.from(zonedDateTime.toInstant());
 
