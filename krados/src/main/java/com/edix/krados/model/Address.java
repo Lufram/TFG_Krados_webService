@@ -15,6 +15,5 @@ public class Address {
     private String roadName;
     private String cityName;
     private String extraInfo;
-    private int number;
     private String postalCode;
 }

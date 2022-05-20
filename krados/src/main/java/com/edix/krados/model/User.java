@@ -25,5 +25,6 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Client client;
     @ManyToMany(fetch = FetchType.EAGER)
+
     private Collection<Role> roles = new ArrayList();
 }

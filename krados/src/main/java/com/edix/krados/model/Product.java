@@ -9,6 +9,7 @@ import lombok.ToString;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
+import java.lang.reflect.Type;
 import java.util.List;
 
 @Entity
@@ -19,8 +20,10 @@ public class Product {
     private Long id;
     @Column(name = "name", nullable = false, unique = true)
     private String name;
+    @Column(columnDefinition = "LONGTEXT")
     private String info;
     private boolean inOffer = false;
+    private String url;
     @Column(name = "unity_price", nullable = false)
     private double uPrice;
 	@JsonIgnore
@@ -98,8 +101,26 @@ public class Product {
 		this.category = category;
 	}
 
+	public boolean isInOffer() {
+		return inOffer;
+	}
+
+	public void setInOffer(boolean inOffer) {
+		this.inOffer = inOffer;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+
 	@Override
     public String toString() {
     	return "Producto [id=" + id + ", nombre=" + name + ", info=" + info + ", uPrice=" + uPrice + ", categoria="+ category +"]";
     }
+
 }

@@ -11,7 +11,6 @@ public class RegisterForm {
     private String lastname;
 
     private String roadName;
-    private int roadNum;
     private String city;
     private String state;
     private String postalCode;

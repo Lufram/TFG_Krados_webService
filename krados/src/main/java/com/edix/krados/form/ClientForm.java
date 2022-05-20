@@ -10,6 +10,10 @@ public class ClientForm {
     private String surname;
     private Address address;
     private Long cartId;
+    private String roadName;
+    private String cityName;
+    private String extraInfo;
+    private String postalCode;
 }
 
 
