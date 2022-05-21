@@ -15,7 +15,6 @@ general del proyecto: https://github.com/jabaron56/TFG_Krados.git
 
 - [Construido con](#construido-con) 🛠️
 - [Instalación](#instalación) 📦
-- [Despliegue](#despliegue) 🚀
 - [Autores](#autores) ✒️
 
 ***
@@ -48,13 +47,13 @@ _Estas instrucciones te permitirán obtener una copia del proyecto en funcionami
 
 1. _Lo primero es ejecutar el gestor XAMPP y arrancar apache y mysql._
 2. _Después tendras que ingresar en la opción de admin de mysql disponible en el gestor XAMPP y crear la base de datos **krados_database**._
-3. _Una vez creada la base de datos tendremos que dirigirnos al proyecto webService y ejecutar el servicio **KradosApplication** que se encuentra en la ruta **\src\main\java\com\edix\krados**._
+3. _Una vez creada la base de datos tendremos que dirigirnos al proyecto webService y mediante Intellij ejecutar el servicio **KradosApplication** que se encuentra en la ruta **\src\main\java\com\edix\krados**._
 4. _Ahora tendremos que dirigirnos al proyecto webService y ejecutar mediante Intellij las clases que se encuentran en la ruta **\src\test\java\com\edix\krados** en el siguiente orden:_
    - KradosApplicationRoles.
    - KradosApplicationCategory.
    - KradosApplicationProduct.
-5. _Con las clases anteriormente mencionadas se llena la base de datos con unos datos de prueba._
-6. _Ahora se podría comprobar el funcionamiento del servicio mediante Postman o ejecutando el proyecto de Android mencionado en la introducción_
+5. _Con las clases anteriormente mencionadas se llena la base de datos con unos datos de prueba y ya estaría disponible el servicio._
+6. _Por último, se podría comprobar el funcionamiento del servicio mediante Postman o ejecutando el proyecto de Android mencionado en la introducción_
 
 ## Autores
 
