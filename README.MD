@@ -39,7 +39,7 @@ Mira **Deployment** para conocer como desplegar el proyecto.
 _Software necesario para obtener una copia del proyecto el proyecto_
 
 -Xampp  
--Intellij IDEA
+-Intellij IDEA  
 -Postman (opcional)
 
 ### Instalación y Despliegue🔧
